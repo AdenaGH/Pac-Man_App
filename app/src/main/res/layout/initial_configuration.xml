@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/nameTextView"
         android:layout_width="84dp"
         android:layout_height="26dp"
         android:text="Player:"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.001" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="58dp"
@@ -30,17 +30,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Difficulty:"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2" />
+    <Spinner
+        android:id="@+id/difficultySpinner"
+        android:layout_width="107dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toStartOf="@+id/nameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
