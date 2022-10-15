@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Sprint 1 intro</string>
+    <string name="intro_text"> Welcome to Pac-Man</string>
+    <string name="quit_button">Quit</string>
+    <string name="start_button">Start</string>
+    <string name="image_desc">Game logo</string>
+</resources>
