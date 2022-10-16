@@ -18,6 +18,7 @@ public class IntroScreen extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setContentView(R.layout.initial_configuration);
                 // Intent intent = new Intent(IntroScreen.this, MainActivity.class);
                 //startActivity(intent);
             }
