@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     contButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            setContentView(R.layout.activity_main);
+                            setContentView(R.layout.activity_game);
                         }
                     });
                 }
