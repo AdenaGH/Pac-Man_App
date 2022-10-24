@@ -64,7 +64,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     contButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            setContentView(R.layout.activity_game);
+                            TextView difficultyText = (TextView) findViewById(R.id.difficultyTextView);
+                            String str = ((difficultyText.getText().toString()).split(" "))[1];
+                            Intent intent = new Intent(MainActivity.this, game.class);
+                            intent.putExtra("difficulty", str);
+                            startActivity(intent);
+
                         }
                     });
                 }
