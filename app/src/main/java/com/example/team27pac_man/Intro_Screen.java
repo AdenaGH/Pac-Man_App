@@ -1,4 +1,4 @@
-package com.example.Team_27_Pac-Man;
+package com.example.team27pac_man;
 
 import androidx.appcompat.app.AppCompatActivity;
 
