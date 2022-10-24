@@ -1,53 +1,34 @@
-package com.example.pac_man_start_screen;
-
-import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+package com.example.sprint1intro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.pac_man_start_screen.databinding.ActivityIntroScreenBinding;
-
-public class Intro_Screen extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityIntroScreenBinding binding;
+public class IntroScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivityIntroScreenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_intro_screen);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.intro_screen);
+        Button start = (Button) (findViewById(R.id.start_button));
+        Button quit = (Button) (findViewById(R.id.quit_button));
+        start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                setContentView(R.layout.initial_configuration);
+                //Intent intent = new Intent(IntroScreen.this, MainActivity.class);
+                //startActivity(intent);
+            }
+        });
+        quit.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_intro_screen);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
 
 }
