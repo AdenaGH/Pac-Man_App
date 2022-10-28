@@ -85,6 +85,22 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     public static int getLives(){
+        if(difficulty.equals("Passive")){
+            lives=6;
+        }
+        if(difficulty.equals("Easy")){
+            lives=5;
+        }
+        if(difficulty.equals("Medium")){
+            lives=4;
+        }
+        if(difficulty.equals("Hard")){
+            lives=3;
+        }
+        if(difficulty.equals("Expert")){
+            lives=2;
+        }
+
         return lives;
     }
 
