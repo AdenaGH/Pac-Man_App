@@ -63,7 +63,7 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
                         public void onClick(View view) {
                             TextView difficultyText = (TextView) findViewById(R.id.difficultyTextView);
                             String str = ((difficultyText.getText().toString()).split(" "))[1];
-                            Intent intent = new Intent(configure.this, game.class);
+                            Intent intent = new Intent(configure.this, Maze.class);
                             intent.putExtra("difficulty", str);
                             startActivity(intent);
 
