@@ -24,6 +24,7 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
     }
 
 
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
