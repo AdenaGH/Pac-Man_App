@@ -17,7 +17,10 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         TextView score = (TextView) findViewById(R.id.scoreTextView);
         TextView lives = (TextView) findViewById(R.id.livesTextView);
         TextView difficulty = (TextView) findViewById(R.id.difficultyTextView);
-        //playerName.setText();
+        playerName.setText("Player name: "+configure.getPlayerName());
+        lives.setText("Lives: "+configure.getLives());
+        difficulty.setText("Difficulty: "+configure.getDifficulty());
+        //score.setText();
     }
 
 

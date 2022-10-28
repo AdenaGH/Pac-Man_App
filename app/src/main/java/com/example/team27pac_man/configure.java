@@ -16,6 +16,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class configure extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    private static String playerName;
+    private static int lives;
+    private static String difficulty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +47,6 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void onClick(View view) {
                 EditText editName = (EditText) findViewById(R.id.nameEditText);
-                String playerName;
                 if (editName.getText().toString().contains(" ")
                         || editName.getText().toString().isEmpty()
                         || editName.getText().toString().trim().isEmpty()) {
@@ -77,15 +80,29 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
+    public static String getPlayerName() {
+        return playerName;
+    }
+
+    public static int getLives(){
+        return lives;
+    }
+
+    public static String getDifficulty(){
+        return difficulty;
+    }
+
+
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         switch (parent.getId()) {
             case R.id.difficultySpinner: {
-                String text = parent.getItemAtPosition(pos).toString();
-                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+                difficulty = parent.getItemAtPosition(pos).toString();
+                Toast.makeText(parent.getContext(), difficulty, Toast.LENGTH_SHORT).show();
                 TextView difficultyText = (TextView) findViewById(R.id.difficultyTextView);
-                difficultyText.setText("Difficulty: " + text);
+                difficultyText.setText("Difficulty: " + difficulty);
             }
             case R.id.spriteSpinner: {
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
