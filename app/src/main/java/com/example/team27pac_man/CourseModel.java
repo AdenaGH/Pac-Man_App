@@ -25,5 +25,6 @@ public class CourseModel {
 
     public void setImgid(int imgid) {
         this.imgid = imgid;
+
     }
 }
