@@ -1,14 +1,14 @@
 //package com.example.team27pac_man.map.GameObjects;
 //
-//import android.graphics.Canvas;
-//import android.graphics.Rect;
+////import android.graphics.Canvas;
+////import android.graphics.Rect;
 //import com.example.team27pac_man.R;
 //import android.content.Context;
 //
 //
 //
 //public class Wall extends Tile {
-//    private final Sprite sprite;
+////    private final Sprite sprite;
 //    private  static final int SPRITE_SUB = 7;
 //    private int randomNumber = (int)((Math.random() * 14 ) + 0); //Random no between 0 to 14
 //    private enum WallType{

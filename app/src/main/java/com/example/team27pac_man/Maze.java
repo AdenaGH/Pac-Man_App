@@ -71,6 +71,7 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
             int imageId;
             if(displayIds[i] == 0){
                 imageId = R.drawable.t_wall;
+//                ImageView image = se;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 1){
                 imageId = R.drawable.pellet;
@@ -85,7 +86,7 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
                 imageId = R.drawable.ghostbox;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 5){
-                imageId = R.drawable.empty_image;
+                imageId = R.drawable.no_image;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 6){
                 imageId = R.drawable.hlong_wall;
