@@ -203,6 +203,7 @@
             android:horizontalSpacing="0dp"
             android:numColumns="16"
             android:verticalSpacing="0dp"
+            android:stretchMode="columnWidth"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
