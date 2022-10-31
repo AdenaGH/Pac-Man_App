@@ -3,6 +3,7 @@ package com.example.team27pac_man;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.Bitmap;
@@ -14,6 +15,8 @@ import android.widget.TableRow;
 import android.util.DisplayMetrics;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class Maze extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private int screenWidth;
     private int totalRows;
@@ -21,6 +24,7 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
     private int blockLength;
     private Bitmap[][] layout;
     private ImageView imageView;
+    GridView coursesGV;
 //    private int[][] layoutIds;
 //    int screenHeight;
 
@@ -35,6 +39,27 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         playerName.setText("Player name: "+ configure.getPlayerName());
         lives.setText("Lives: "+ configure.getLives());
         difficulty.setText("Difficulty: " + configure.getDifficulty());
+
+        coursesGV = findViewById(R.id.gameGrid);
+        ArrayList<CourseModel> courseModelArrayList = new ArrayList<CourseModel>();
+
+//        courseModelArrayList.add(new CourseModel("DSA", R.drawable.mr_pacman));
+//        courseModelArrayList.add(new CourseModel("JAVA", R.drawable.ms_pacman));
+//        courseModelArrayList.add(new CourseModel("C++", R.drawable.mr_pacman));
+//        courseModelArrayList.add(new CourseModel("Python", R.drawable.ms_pacman));
+//        courseModelArrayList.add(new CourseModel("Javascript", R.drawable.mr_pacman));
+//        courseModelArrayList.add(new CourseModel("DSA", R.drawable.ms_pacman));
+        for (int i = 0; i <= 100; i++) {
+            if (i%2 == 0) {
+                courseModelArrayList.add(new CourseModel("even", R.drawable.mr_pacman));
+            } else {
+                courseModelArrayList.add(new CourseModel("odd", R.drawable.ms_pacman));
+            }
+        }
+
+        CourseGVAdapter adapter = new CourseGVAdapter(this, courseModelArrayList);
+        coursesGV.setAdapter(adapter);
+
         //score.setText();
 //        initializeSize(); //creates the maze
     }

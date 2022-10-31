@@ -34,7 +34,8 @@
             android:text="Player Name"
             android:textColor="#FFFFFF"
             tools:layout_editor_absoluteX="2dp"
-            tools:layout_editor_absoluteY="2dp" />
+            tools:layout_editor_absoluteY="2dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/difficultyTextView"
@@ -43,7 +44,8 @@
             android:text="Difficulty"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="2dp" />
+            tools:layout_editor_absoluteY="2dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/scoreTextView"
@@ -53,7 +55,8 @@
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="@+id/difficultyTextView"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="2dp" />
+            tools:layout_editor_absoluteY="2dp"
+            tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -193,7 +196,13 @@
 <!--            app:srcCompat="@drawable/vshort_wall"-->
 <!--            tools:layout_editor_absoluteX="349dp"-->
 <!--            tools:layout_editor_absoluteY="191dp" />-->
--
+        <GridView
+            android:id="@+id/gameGrid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="0dp"
+            android:numColumns="10"
+            android:verticalSpacing="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
