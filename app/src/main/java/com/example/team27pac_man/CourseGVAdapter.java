@@ -11,10 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
-public class CourseGVAdapter extends ArrayAdapter<CourseModel> {
+public class CourseGVAdapter extends ArrayAdapter<Integer> {
 
-    public CourseGVAdapter(@NonNull Context context, ArrayList<CourseModel> courseModelArrayList) {
-        super(context, 0, courseModelArrayList);
+    public CourseGVAdapter(@NonNull Context context, ArrayList<CourseModel> layoutIds) {
+        super(context, 0, layoutIds);
     }
 
     @NonNull
@@ -31,7 +31,7 @@ public class CourseGVAdapter extends ArrayAdapter<CourseModel> {
         TextView courseTV = listitemView.findViewById(R.id.testText);
         ImageView courseIV = listitemView.findViewById(R.id.testImage);
 
-        courseTV.setText(courseModel.getCourse_name());
+        courseTV.setText(courseModel.getLayout_id());
         courseIV.setImageResource(courseModel.getImgid());
         return listitemView;
     }

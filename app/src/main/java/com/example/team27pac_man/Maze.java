@@ -16,6 +16,8 @@ import android.util.DisplayMetrics;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Maze extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private int screenWidth;
@@ -43,21 +45,77 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         coursesGV = findViewById(R.id.gameGrid);
         ArrayList<CourseModel> courseModelArrayList = new ArrayList<CourseModel>();
 
+        Integer [] displayIds = {6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5,
+                5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                7, 5, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 7, 5,
+                5, 5, 1, 0, 5, 1, 0, 5, 1, 1, 0, 5, 1, 1, 5, 5,
+                7, 5, 8, 5, 5, 1, 5, 5, 1, 1, 5, 5, 1, 1, 7, 5,
+                5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5,
+                7, 5, 1, 0, 5, 1, 1, 1, 1, 1, 1, 0, 5, 1, 7, 5,
+                5, 5, 1, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 8, 5, 5,
+                5, 5, 1, 1, 1, 1, 4, 5, 5, 5, 1, 1, 1, 1, 5, 5,
+                5, 5, 1, 0, 5, 1, 5, 3, 3, 5, 1, 0, 5, 1, 5, 5,
+                5, 5, 1, 5, 5, 1, 5, 3, 3, 5, 1, 5, 5, 1, 5, 5,
+                5,5,1,1,1,1,5,5,5,5,1,8,1,1,5,5,
+                7, 5, 1, 0, 5, 1, 1, 1, 1, 1, 1, 0, 5, 1, 7, 5,
+                5,5,1,5,5,1,0,5,1,1,1,5,5,1,5,5,
+                7,5,1,1,1,1,5,5,1,1,1,1,1,1,7,5,
+                5,5,1,0,5,1,1,1,1,1,0,5,1,1,5,5,
+                7,5,1,5,5,1,1,1,1,1,5,5,1,1,7,5,
+                5,5,1,1,1,1,1,1,8,1,1,1,1,1,5,5,
+                6,5,6,5,6,5,5,5,5,5,6,5,6,5,7,5,
+                5,5,5,5,5,5,5,2,5,5,5,5,5,5,5,5};
+        ArrayList<CourseModel> layoutIds = new ArrayList<>();
+
+        for(int i = 0; i< displayIds.length; i++){
+            int imageId;
+            if(displayIds[i] == 0){
+                imageId = R.drawable.t_wall;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 1){
+                imageId = R.drawable.pellet;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 2){
+                imageId = R.drawable.aware_pacman;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 3){
+                imageId = R.drawable.pink_modified;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 4){
+                imageId = R.drawable.ghostbox;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 5){
+                imageId = R.drawable.empty_image;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 6){
+                imageId = R.drawable.hlong_wall;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 7){
+                imageId = R.drawable.vlong_wall;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 8){
+                imageId = R.drawable.power_pellet;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            }
+        }
+
+
+
 //        courseModelArrayList.add(new CourseModel("DSA", R.drawable.mr_pacman));
 //        courseModelArrayList.add(new CourseModel("JAVA", R.drawable.ms_pacman));
 //        courseModelArrayList.add(new CourseModel("C++", R.drawable.mr_pacman));
 //        courseModelArrayList.add(new CourseModel("Python", R.drawable.ms_pacman));
 //        courseModelArrayList.add(new CourseModel("Javascript", R.drawable.mr_pacman));
 //        courseModelArrayList.add(new CourseModel("DSA", R.drawable.ms_pacman));
-        for (int i = 0; i <= 100; i++) {
-            if (i%2 == 0) {
-                courseModelArrayList.add(new CourseModel("even", R.drawable.mr_pacman));
-            } else {
-                courseModelArrayList.add(new CourseModel("odd", R.drawable.ms_pacman));
-            }
-        }
+//        for (int i = 0; i <= 100; i++) {
+//            if (i%2 == 0) {
+//                courseModelArrayList.add(new CourseModel("even", R.drawable.mr_pacman));
+//            } else {
+//                courseModelArrayList.add(new CourseModel("odd", R.drawable.ms_pacman));
+//            }
+//        }
 
-        CourseGVAdapter adapter = new CourseGVAdapter(this, courseModelArrayList);
+        CourseGVAdapter adapter = new CourseGVAdapter(this, layoutIds);
         coursesGV.setAdapter(adapter);
 
         //score.setText();

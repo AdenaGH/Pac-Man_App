@@ -3,20 +3,20 @@ package com.example.team27pac_man;
 public class CourseModel {
     // string course_name for storing course_name
     // and imgid for storing image id.
-    private String course_name;
+    private Integer layoutId;
     private int imgid;
 
-    public CourseModel(String course_name, int imgid) {
-        this.course_name = course_name;
+    public CourseModel(Integer layoutId, int imgid) {
+        this.layoutId = layoutId;
         this.imgid = imgid;
     }
 
-    public String getCourse_name() {
-        return course_name;
+    public Integer getLayout_id() {
+        return layoutId;
     }
 
-    public void setCourse_name(String course_name) {
-        this.course_name = course_name;
+    public void setLayoutId(Integer layoutId) {
+        this.layoutId = layoutId;
     }
 
     public int getImgid() {
