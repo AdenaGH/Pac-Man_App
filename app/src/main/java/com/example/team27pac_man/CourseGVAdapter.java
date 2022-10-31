@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
-public class CourseGVAdapter extends ArrayAdapter<Integer> {
+public class CourseGVAdapter extends ArrayAdapter<CourseModel> {
 
     public CourseGVAdapter(@NonNull Context context, ArrayList<CourseModel> layoutIds) {
         super(context, 0, layoutIds);
@@ -31,7 +31,7 @@ public class CourseGVAdapter extends ArrayAdapter<Integer> {
         TextView courseTV = listitemView.findViewById(R.id.testText);
         ImageView courseIV = listitemView.findViewById(R.id.testImage);
 
-        courseTV.setText(courseModel.getLayout_id());
+        courseTV.setText((courseModel.getLayout_id().toString()));
         courseIV.setImageResource(courseModel.getImgid());
         return listitemView;
     }
