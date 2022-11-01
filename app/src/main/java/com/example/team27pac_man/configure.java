@@ -19,6 +19,7 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
     private static String playerName;
     private static int lives;
     private static String difficulty;
+    static int pacRes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,9 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
                 }
             }
         }
+    }
+    public static int getPacRes(){
+        return pacRes;
     }
 
     @Override
