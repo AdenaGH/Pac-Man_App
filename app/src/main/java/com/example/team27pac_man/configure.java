@@ -19,6 +19,7 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
     private static String playerName;
     private static int lives;
     private static String difficulty;
+    private static int pacRes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,9 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
         return difficulty;
     }
 
-
+    public static int getPacRes() {
+        return pacRes;
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -125,17 +128,17 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
                 String text = parent.getItemAtPosition(pos).toString();
                 if (text.equals("mrPacMan")) {
                     imageView.setImageResource(R.drawable.mr_pacman);
+                    pacRes = 1;
                 } else if (text.equals("msPacMan")) {
                     imageView.setImageResource(R.drawable.ms_pacman);
+                    pacRes = 2;
                 } else {
                     imageView.setImageResource(R.drawable.aware_pacman);
+                    pacRes = 3;
                 }
             }
         }
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
 }

@@ -27,6 +27,7 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
     private Bitmap[][] layout;
     private ImageView imageView;
     GridView coursesGV;
+    Integer [] displayIds;
 //    private int[][] layoutIds;
 //    int screenHeight;
 
@@ -45,27 +46,26 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         coursesGV = findViewById(R.id.gameGrid);
         ArrayList<CourseModel> courseModelArrayList = new ArrayList<CourseModel>();
 
-        Integer [] displayIds = {
-                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                1, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 1,
-                1, 3, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 1,
-                1, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1,
-                1, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1,
-                1, 3, 3, 3, 1, 3, 1, 1, 1, 1, 3, 3, 3, 3, 3, 1,
-                1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1,
-                1, 3, 3, 3, 3, 1, 1, 2, 2, 1, 1, 3, 3, 3, 3, 1,
-                2, 3, 3, 3, 3, 1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 2,
-                2, 3, 3, 3, 3, 1, 9, 9, 9, 9, 1, 3, 3, 1, 3, 2,
-                1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 3, 1,
-                1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 1,
-                1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 1,
-                1, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 1,
-                1, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 1,
-                1, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 1,
-                1, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 1,
-                1, 3, 1, 1, 1, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1,
-                1, 6, 3, 3, 3, 3, 1, 5, 1, 3, 3, 3, 3, 3, 6, 1,
-                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        displayIds = new Integer[]{6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5, 6, 5,
+                5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                7, 5, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 7, 5,
+                5, 5, 1, 0, 5, 1, 0, 5, 1, 1, 0, 5, 1, 1, 5, 5,
+                7, 5, 8, 5, 5, 1, 5, 5, 1, 1, 5, 5, 1, 1, 7, 5,
+                5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5,
+                7, 5, 1, 0, 5, 1, 1, 1, 1, 1, 1, 0, 5, 1, 7, 5,
+                5, 5, 1, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 8, 5, 5,
+                5, 5, 1, 1, 1, 1, 4, 5, 5, 5, 1, 1, 1, 1, 5, 5,
+                5, 5, 1, 0, 5, 1, 5, 3, 3, 5, 1, 0, 5, 1, 5, 5,
+                5, 5, 1, 5, 5, 1, 5, 3, 3, 5, 1, 5, 5, 1, 5, 5,
+                5, 5, 1, 1, 1, 1, 5, 5, 5, 5, 1, 8, 1, 1, 5, 5,
+                7, 5, 1, 0, 5, 1, 1, 1, 1, 1, 1, 0, 5, 1, 7, 5,
+                5, 5, 1, 5, 5, 1, 0, 5, 1, 1, 1, 5, 5, 1, 5, 5,
+                7, 5, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 7, 5,
+                5, 5, 1, 0, 5, 1, 1, 1, 1, 1, 0, 5, 1, 1, 5, 5,
+                7, 5, 1, 5, 5, 1, 1, 1, 1, 1, 5, 5, 1, 1, 7, 5,
+                5, 5, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 5, 5,
+                6, 5, 6, 5, 6, 5, 5, 5, 5, 5, 6, 5, 6, 5, 7, 5,
+                5, 5, 5, 5, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5};
         ArrayList<CourseModel> layoutIds = new ArrayList<>();
 
         for(int i = 0; i< displayIds.length; i++){
@@ -74,25 +74,28 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
                 imageId = R.drawable.t_wall;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 1){
-                imageId = R.drawable.blue_block;
+                imageId = R.drawable.pellet;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
-            } else if(displayIds[i] == 5){
+            } else if(displayIds[i] == 2){
                 imageId = R.drawable.aware_pacman;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 3){
-                imageId = R.drawable.normal;
+                imageId = R.drawable.pink_modified;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
-            } else if(displayIds[i] == 2){
-                imageId = R.drawable.blank;
+            } else if(displayIds[i] == 4){
+                imageId = R.drawable.ghostbox;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
-            }  else if(displayIds[i] == 6){
-                imageId = R.drawable.power;
+            } else if(displayIds[i] == 5){
+                imageId = R.drawable.empty_image;
+                layoutIds.add(new CourseModel(displayIds[i], imageId));
+            } else if(displayIds[i] == 6){
+                imageId = R.drawable.hlong_wall;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             } else if(displayIds[i] == 7){
                 imageId = R.drawable.vlong_wall;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
-            } else if(displayIds[i] == 9){
-                imageId = R.drawable.pink_modified;
+            } else if(displayIds[i] == 8){
+                imageId = R.drawable.power_pellet;
                 layoutIds.add(new CourseModel(displayIds[i], imageId));
             }
         }
@@ -209,6 +212,10 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
             }
         }
 
+    }
+
+    public static Integer[] getDisplayIds() {
+        return displayIds;
     }
 
     @Override
