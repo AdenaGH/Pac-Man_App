@@ -268,7 +268,7 @@ public class GameView extends View {
                     if(!player.visited){
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
-                            score=score+5;
+                            score=score+10; //make a bigger change?
                         }else{
                             score=score+1;
 
@@ -288,7 +288,7 @@ public class GameView extends View {
 
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
-                            score=score+5;
+                            score=score+10;
                         }else{
                             score=score+1;
 
@@ -311,7 +311,7 @@ public class GameView extends View {
 
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
-                            score=score+5;
+                            score=score+10;
                         }else{
                             score=score+1;
 
@@ -334,7 +334,7 @@ public class GameView extends View {
 
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
-                            score=score+5;
+                            score=score+10;
                         }else{
                             score=score+1;
 
