@@ -25,9 +25,9 @@ public class GameView extends View {
             {1,3,7,1,4,4,2,6,4,2},
             {1,0,2,10,5,7,10,5,3,8},
             {1,4,2,1,0,2,1,0,0,12},
-            {10,5,0,2,6,8,6,0,0,7},
-            {10,1,4,4,11,3,7,1,7,10},
-            {6,4,11,11,3,4,4,4,8,13}
+            {10,5,0,2,6,8,1,4,0,7},
+            {10,1,4,4,11,3,0,3,7,10},
+            {6,4,11,11,3,4,4,4,4,8}
     };
 
     private cell[][] cells;
@@ -119,7 +119,7 @@ public class GameView extends View {
 
             }
         }
-        player=cells[0][0];
+        player=cells[3][9];
 
     }
 
@@ -190,7 +190,18 @@ public class GameView extends View {
                 }
             }
         }
-        pac=BitmapFactory.decodeResource(getResources(),R.drawable.pac);
+        switch(configure.getPacRes()) {
+            case 1:
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.pac);
+                canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
+                break;
+            case 2:
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.ms_pacman);
+                break;
+            case 3:
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.aware_pacman);
+                break;
+        }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
 
     }
