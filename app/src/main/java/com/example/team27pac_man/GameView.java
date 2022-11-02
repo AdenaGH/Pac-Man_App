@@ -24,23 +24,35 @@ public class GameView extends View {
             {5,11,11,3,0,3,3,3,3,7},
             {1,3,7,1,4,4,2,6,4,2},
             {1,0,2,10,5,7,10,5,3,8},
-            {1,4,2,1,0,2,1,0,0,12},
-            {10,5,0,2,6,8,1,4,0,7},
+            {1,4,2,10,0,2,1,0,0,12},
+            {10,5,0,2,6,8,1,4,4,7},
             {10,1,4,4,11,3,0,3,7,10},
             {6,4,11,11,3,4,4,4,4,8}
     };
 
     private cell[][] cells;
     private cell player;
+    private cell blue_ghost;
+    private cell pink_ghost;
+    private cell red_ghost;
+    private cell yellow_ghost;
     private static final int COLS=7,ROWS=10;
     private float cellSize,hMar,vMar;
     private final float thick = 15;
+    private Paint thinwall;
     private Paint wall;
     private Paint pellets;
-    private Paint playerpaint;
+    private  Paint power;
     Bitmap pac;
+    Bitmap blue;
+    Bitmap red;
+    Bitmap yellow;
+    Bitmap pink;
     public static int getScore(){
         return score;
+    }
+    public static void setScore(int score) {
+        GameView.score = score;
     }
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -48,10 +60,11 @@ public class GameView extends View {
         wall= new Paint();
         wall.setColor(Color.BLUE);
         wall.setStrokeWidth(thick);
+        thinwall= new Paint();
+        thinwall.setColor(Color.WHITE);
+        thinwall.setStrokeWidth(5);
         pellets = new Paint();
         pellets.setColor(Color.YELLOW);
-        playerpaint=new Paint();
-        playerpaint.setColor(Color.RED);
         createMaze();
     }
     private void createMaze(){
@@ -120,6 +133,11 @@ public class GameView extends View {
             }
         }
         player=cells[3][9];
+        blue_ghost=cells[2][4];
+        red_ghost=cells[2][5];
+        pink_ghost=cells[4][4];
+        yellow_ghost=cells[4][5];
+
 
     }
 
@@ -139,15 +157,28 @@ public class GameView extends View {
         cells[3][5].pellet=false;
         cells[4][4].pellet=false;
         cells[4][5].pellet=false;
+        cells[3][9].visited=true;
         for(int x = 0;x<COLS;x++){
             for(int y =0;y<ROWS;y++){
+
                 if(cells[x][y].pellet){
-                    canvas.drawCircle(
-                            (x)*cellSize+(cellSize/2),
-                            (y)*cellSize+(cellSize/2),
-                            cellSize/20,
-                            pellets
-                    );
+                    if((x==0 && y ==0)||(x==6 && y==0)||(x==0 && y ==9)||(x==6 && y ==9)){
+                        canvas.drawCircle(
+                                (x)*cellSize+(cellSize/2),
+                                (y)*cellSize+(cellSize/2),
+                                cellSize/5,
+                                pellets
+                        );
+
+                    }else {
+                        canvas.drawCircle(
+                                (x)*cellSize+(cellSize/2),
+                                (y)*cellSize+(cellSize/2),
+                                cellSize/20,
+                                pellets
+                        );
+                    }
+
                 }
                 if(cells[x][y].topWall){
                     canvas.drawLine(
@@ -170,13 +201,27 @@ public class GameView extends View {
                 }
 
                 if(cells[x][y].bottomWall){
-                    canvas.drawLine(
-                            x*cellSize,
-                            (y+1)*cellSize,
-                            (x+1)*cellSize,
-                            (y+1)*cellSize,
-                            wall
-                    );
+                    if(x==3 && y==3){
+                        canvas.drawLine(
+                                x*cellSize,
+                                (y+1)*cellSize,
+                                (x+1)*cellSize,
+                                (y+1)*cellSize,
+                                thinwall
+                        );
+
+                    }else{
+                        canvas.drawLine(
+                                x*cellSize,
+                                (y+1)*cellSize,
+                                (x+1)*cellSize,
+                                (y+1)*cellSize,
+                                wall
+                        );
+
+                    }
+
+
                 }
 
                 if(cells[x][y].rightWall){
@@ -192,17 +237,26 @@ public class GameView extends View {
         }
         switch(configure.getPacRes()) {
             case 1:
-                pac=BitmapFactory.decodeResource(getResources(),R.drawable.pac);
-                canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.mrpac);
                 break;
             case 2:
-                pac=BitmapFactory.decodeResource(getResources(),R.drawable.ms_pacman);
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.mspacman);
                 break;
             case 3:
-                pac=BitmapFactory.decodeResource(getResources(),R.drawable.aware_pacman);
+                pac=BitmapFactory.decodeResource(getResources(),R.drawable.awarepac);
                 break;
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
+
+
+        blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
+        canvas.drawBitmap(blue,(blue_ghost.col*cellSize)+(cellSize/4),(blue_ghost.row*cellSize)+(cellSize/4),null);
+        pink=BitmapFactory.decodeResource(getResources(),R.drawable.pink);
+        canvas.drawBitmap(pink,(pink_ghost.col*cellSize)+(cellSize/4),(pink_ghost.row*cellSize)+(cellSize/4),null);
+        red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
+        canvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
+        yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
+        canvas.drawBitmap(yellow,(yellow_ghost.col*cellSize)+(cellSize/4),(yellow_ghost.row*cellSize)+(cellSize/4),null);
 
     }
 
@@ -210,23 +264,36 @@ public class GameView extends View {
         switch (direction){
             case UP:
                 if(!player.topWall){
-                player=cells[player.col][player.row-1];
-                if(!player.visited){
-                    player.pellet=false;
-                    score=score+1;
-                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                    scoreText.setText("Score: " + score);
-                    scoreText.invalidate();
-                    player.visited=true;
-                }
+                    player=cells[player.col][player.row-1];
+                    if(!player.visited){
+                        player.pellet=false;
+                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                            score=score+5;
+                        }else{
+                            score=score+1;
+
+                        }
+
+                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                        scoreText.setText("Score: " + score);
+                        scoreText.invalidate();
+                        player.visited=true;
+                    }
                 }
                 break;
             case DOWN:
                 if(!player.bottomWall){
                     player=cells[player.col][player.row+1];
                     if(!player.visited){
+
                         player.pellet=false;
-                        score=score+1;
+                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                            score=score+5;
+                        }else{
+                            score=score+1;
+
+                        }
+
                         TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                         scoreText.setText("Score: " + score);
                         scoreText.invalidate();
@@ -236,10 +303,20 @@ public class GameView extends View {
                 break;
             case LEFT:
                 if(!player.leftWall){
-                    player=cells[player.col-1][player.row];
+                    if(player.col==0 && player.row==4){
+                        player=cells[6][4];
+                    }else{player=cells[player.col-1][player.row];}
+
                     if(!player.visited){
+
                         player.pellet=false;
-                        score=score+1;
+                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                            score=score+5;
+                        }else{
+                            score=score+1;
+
+                        }
+
                         TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                         scoreText.setText("Score: " + score);
                         scoreText.invalidate();
@@ -248,11 +325,21 @@ public class GameView extends View {
                 }
                 break;
             case RIGHT:
+
                 if(!player.rightWall){
-                    player=cells[player.col+1][player.row];
+                    if(player.col==6 && player.row==4){
+                        player=cells[0][4];
+                    }else{player=cells[player.col+1][player.row];}
                     if(!player.visited){
+
                         player.pellet=false;
-                        score=score+1;
+                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                            score=score+5;
+                        }else{
+                            score=score+1;
+
+                        }
+
                         TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                         scoreText.setText("Score: " + score);
                         scoreText.invalidate();
@@ -291,10 +378,10 @@ public class GameView extends View {
                 } else{
                     //movey
                     if(dy>0){
-                        //move up
+
                         movePlayer(Direction.DOWN);
                     }else {
-                        //move down
+
                         movePlayer(Direction.UP);
                     }
                 }

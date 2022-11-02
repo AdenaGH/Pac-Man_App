@@ -32,7 +32,8 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         playerName.setText("Player name: "+ configure.getPlayerName());
         lives.setText("Lives: "+ configure.getLives());
         difficulty.setText("Difficulty: " + configure.getDifficulty());
-        score.setText("score:"+GameView.getScore());
+        score.setText("score:"+0);
+        GameView.setScore(0);
     }
 
 //    public void updateScore(String text, TextView score) {
