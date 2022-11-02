@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Maze extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    //final TextView score = (TextView) findViewById(R.id.scoreTextView);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,10 @@ public class Maze extends AppCompatActivity implements AdapterView.OnItemSelecte
         score.setText("score:"+GameView.getScore());
     }
 
+//    public void updateScore(String text, TextView score) {
+//        score.setText("Score: " +  text);
+//        score.invalidate();
+//    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

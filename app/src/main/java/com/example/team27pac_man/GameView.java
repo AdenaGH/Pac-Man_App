@@ -1,5 +1,6 @@
 package com.example.team27pac_man;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +17,7 @@ import androidx.annotation.Nullable;
 import java.security.cert.TrustAnchor;
 
 public class GameView extends View {
-
+    Context context;
     private static int score=0;
     private enum Direction{UP,DOWN,LEFT,RIGHT}
     private  final int [][] layout= {
@@ -43,6 +44,7 @@ public class GameView extends View {
     }
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         wall= new Paint();
         wall.setColor(Color.BLUE);
         wall.setStrokeWidth(thick);
@@ -201,7 +203,9 @@ public class GameView extends View {
                 if(!player.visited){
                     player.pellet=false;
                     score=score+1;
-
+                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                    scoreText.setText("Score: " + score);
+                    scoreText.invalidate();
                     player.visited=true;
                 }
                 }
@@ -212,7 +216,9 @@ public class GameView extends View {
                     if(!player.visited){
                         player.pellet=false;
                         score=score+1;
-
+                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                        scoreText.setText("Score: " + score);
+                        scoreText.invalidate();
                         player.visited=true;
                     }
                 }
@@ -223,7 +229,9 @@ public class GameView extends View {
                     if(!player.visited){
                         player.pellet=false;
                         score=score+1;
-
+                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                        scoreText.setText("Score: " + score);
+                        scoreText.invalidate();
                         player.visited=true;
                     }
                 }
@@ -234,7 +242,9 @@ public class GameView extends View {
                     if(!player.visited){
                         player.pellet=false;
                         score=score+1;
-                        
+                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                        scoreText.setText("Score: " + score);
+                        scoreText.invalidate();
                         player.visited=true;
                     }
                 }
@@ -282,6 +292,7 @@ public class GameView extends View {
 
         }
         return super.onTouchEvent(event);
+
     }
 
     private class cell{
