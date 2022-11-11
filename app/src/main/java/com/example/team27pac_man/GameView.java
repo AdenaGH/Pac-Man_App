@@ -19,6 +19,7 @@ import java.security.cert.TrustAnchor;
 public class GameView extends View {
     Context context;
     private static int score=0;
+    private static int lives =configure.getLives();
     private enum Direction{UP,DOWN,LEFT,RIGHT}
     private  final int [][] layout= {
             {5,11,11,3,0,3,3,3,3,7},
@@ -392,6 +393,17 @@ public class GameView extends View {
         return super.onTouchEvent(event);
 
     }
+    private void collision(cell player, cell red, cell blue, cell yellow, cell pink){
+        if((player.col==red.col&&player.row==red.row)||(player.col==blue.col&&player.row==blue.row)||(player.col==yellow.col&&player.row==yellow.row)||(player.col==pink.col&&player.row==pink.row)) {
+            player=cells[3][9];
+            lives = lives-1;
+            TextView lives = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+            lives.setText("Lives"+lives);
+
+        }
+
+    }
+
 
     private class cell{
         boolean topWall = false;
