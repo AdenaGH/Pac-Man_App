@@ -1,6 +1,5 @@
 package com.example.team27pac_man;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,10 +13,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import java.security.cert.TrustAnchor;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameView extends View {
     Context context;
+    private static int lives =configure.getLives();
     private static int score=0;
     private enum Direction{UP,DOWN,LEFT,RIGHT}
     private  final int [][] layout= {
@@ -29,7 +33,14 @@ public class GameView extends View {
             {10,1,4,4,11,3,0,3,7,10},
             {6,4,11,11,3,4,4,4,4,8}
     };
-
+    private final int[][] redpathlist={{2,5},{3,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
+    Queue<int[]> redq = new LinkedList<>(Arrays.asList(redpathlist));
+    private final int[][] yellowpathlist={{4,5},{3,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
+    Queue<int[]> yellowq = new LinkedList<>(Arrays.asList(yellowpathlist));
+    private final int[][] bluepathlist={{2,4},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
+    Queue<int[]> blueq = new LinkedList<>(Arrays.asList(bluepathlist));
+    private final int[][] pinkpathlist={{4,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
+    Queue<int[]> pinkq = new LinkedList<>(Arrays.asList(pinkpathlist));
     private cell[][] cells;
     private cell player;
     private cell blue_ghost;
@@ -48,6 +59,14 @@ public class GameView extends View {
     Bitmap red;
     Bitmap yellow;
     Bitmap pink;
+    Timer t1 = new Timer();
+    Timer t = new Timer();
+    private void intialmove(){
+
+
+    }
+
+
     public static int getScore(){
         return score;
     }
@@ -66,7 +85,100 @@ public class GameView extends View {
         pellets = new Paint();
         pellets.setColor(Color.YELLOW);
         createMaze();
+        TimerTask redmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                int[] pos= redq.poll();
+                if(pos[0]==2||pos[0]==3||pos[0]==4){
+                    if(pos[1]!=4&&pos[1]!=5){
+                        redq.add(pos);
+                    }
+                }else{
+                    redq.add(pos);
+                }
+                red_ghost=cells[pos[0]][pos[1]];
+                if(player==red_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask bluemove = new TimerTask() {
+
+            @Override
+            public void run() {
+                int[] pos= blueq.poll();
+                if(pos[0]==2||pos[0]==3||pos[0]==4){
+                    if(pos[1]!=4&&pos[1]!=5){
+                        blueq.add(pos);
+                    }
+                }else{
+                    blueq.add(pos);
+                }
+                blue_ghost=cells[pos[0]][pos[1]];
+                if(player==blue_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask yellowmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                int[] pos= yellowq.poll();
+                if(pos[0]==2||pos[0]==3||pos[0]==4){
+                    if(pos[1]!=4&&pos[1]!=5){
+                        yellowq.add(pos);
+                    }
+                }else{
+                    yellowq.add(pos);
+                }
+                yellow_ghost=cells[pos[0]][pos[1]];
+                if(player==yellow_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask pinkmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                int[] pos= pinkq.poll();
+                if(pos[0]==2||pos[0]==3||pos[0]==4){
+                    if(pos[1]!=4&&pos[1]!=5){
+                        pinkq.add(pos);
+                    }
+                }else{
+                    pinkq.add(pos);
+                }
+                pink_ghost=cells[pos[0]][pos[1]];
+                if(player==pink_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        t.schedule(redmove,0,750);
+        t.schedule(yellowmove,2000,1000);
+        t.schedule(bluemove,4000,1200);
+        t.schedule(pinkmove,6000,1000);
     }
+
     private void createMaze(){
         cells=new cell[COLS][ROWS];
         for(int x = 0;x<COLS;x++){
@@ -368,21 +480,22 @@ public class GameView extends View {
             float absDy =Math.abs(dy);
             if(absDx>cellSize||absDy>cellSize){
                 if(absDx>absDy){
-                    //movex
+
                     if(dx>0){
                         movePlayer(Direction.RIGHT);
                     }else {
-                        //move left
                         movePlayer(Direction.LEFT);
                     }
                 } else{
-                    //movey
+
                     if(dy>0){
 
                         movePlayer(Direction.DOWN);
+
                     }else {
 
                         movePlayer(Direction.UP);
+
                     }
                 }
             }
@@ -393,7 +506,8 @@ public class GameView extends View {
 
     }
 
-    private class cell{
+
+    private class cell {
         boolean topWall = false;
         boolean bottomWall = false;
         boolean rightWall = false;
@@ -407,4 +521,6 @@ public class GameView extends View {
             this.row = row;
         }
     }
+
+
 }
