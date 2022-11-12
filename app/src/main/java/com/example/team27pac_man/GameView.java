@@ -349,8 +349,13 @@ public class GameView extends View {
                 break;
         }
         Clyde.chase();
+        Binky.chase();
+        Inky.chase();
+        Pinky.chase();
         invalidate();
-
+        if(player == red_ghost || player == yellow_ghost || player == blue_ghost || player == pink_ghost) {
+          //
+        }
     }
     public static cell getPlayer() {
         return player;
@@ -388,6 +393,18 @@ public class GameView extends View {
     }
     public static void setRow(cell cell, int newRow) {
         cell.row = newRow;
+    }
+    public static boolean getLeft(cell cell) {
+        return cell.leftWall;
+    }
+    public static boolean getRight(cell cell) {
+        return cell.rightWall;
+    }
+    public static boolean getTop(cell cell) {
+        return cell.topWall;
+    }
+    public static boolean getBottom(cell cell) {
+        return cell.bottomWall;
     }
 
     @Override
