@@ -133,7 +133,7 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
                     imageView.setImageResource(R.drawable.ms_pacman);
                     pacRes = 2;
                 } else {
-                    imageView.setImageResource(R.drawable.aware_pacman);
+                    imageView.setImageResource(R.drawable.awarepac);
                     pacRes = 3;
                 }
             }
