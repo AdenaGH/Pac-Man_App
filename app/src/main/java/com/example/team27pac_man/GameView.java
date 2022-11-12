@@ -31,13 +31,13 @@ public class GameView extends View {
     };
 
     private cell[][] cells;
-    private cell player;
-    private cell blue_ghost;
-    private cell pink_ghost;
-    private cell red_ghost;
-    private cell yellow_ghost;
+    private static cell player;
+    private static cell blue_ghost;
+    private static cell pink_ghost;
+    private static cell red_ghost;
+    private static cell yellow_ghost;
     private static final int COLS=7,ROWS=10;
-    private float cellSize,hMar,vMar;
+    private static float cellSize,hMar,vMar;
     private final float thick = 15;
     private Paint thinwall;
     private Paint wall;
@@ -348,32 +348,46 @@ public class GameView extends View {
                 }
                 break;
         }
+        Clyde.chase();
         invalidate();
 
     }
-    public cell getPlayer() {
+    public static cell getPlayer() {
         return player;
     }
-    public cell getClyde() {
+    public static cell getClyde() {
         return yellow_ghost;
     }
-    public cell getPinky() {
+    public static cell getPinky() {
         return pink_ghost;
     }
-    public cell getInky() {
+    public static cell getInky() {
         return blue_ghost;
     }
-    public cell getBlinky() {
+    public static cell getBlinky() {
         return red_ghost;
     }
-    public float getCellSize() {
+    public static float getCellSize() {
         return cellSize;
     }
-    public float gethMar() {
+    public static float gethMar() {
         return hMar;
     }
-    public float getvMar() {
+    public static float getvMar() {
         return vMar;
+    }
+
+    public static int getCol(cell cell) {
+        return cell.col;
+    }
+    public static int getRow(cell cell) {
+        return cell.row;
+    }
+    public static void setCol(cell cell, int newCol) {
+        cell.col = newCol;
+    }
+    public static void setRow(cell cell, int newRow) {
+        cell.row = newRow;
     }
 
     @Override
@@ -431,5 +445,6 @@ public class GameView extends View {
             this.col = col;
             this.row = row;
         }
+
     }
 }
