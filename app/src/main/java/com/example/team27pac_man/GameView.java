@@ -351,6 +351,30 @@ public class GameView extends View {
         invalidate();
 
     }
+    public cell getPlayer() {
+        return player;
+    }
+    public cell getClyde() {
+        return yellow_ghost;
+    }
+    public cell getPinky() {
+        return pink_ghost;
+    }
+    public cell getInky() {
+        return blue_ghost;
+    }
+    public cell getBlinky() {
+        return red_ghost;
+    }
+    public float getCellSize() {
+        return cellSize;
+    }
+    public float gethMar() {
+        return hMar;
+    }
+    public float getvMar() {
+        return vMar;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -392,6 +416,7 @@ public class GameView extends View {
         return super.onTouchEvent(event);
 
     }
+
 
     private class cell{
         boolean topWall = false;
