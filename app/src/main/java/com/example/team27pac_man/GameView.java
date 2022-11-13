@@ -348,10 +348,10 @@ public class GameView extends View {
                 }
                 break;
         }
-        Clyde.chase();
-        Binky.chase();
-        Inky.chase();
-        Pinky.chase();
+        clydeChase();
+        blinkyChase();
+        inkyChase();
+        pinkyChase();
         invalidate();
         if(player == red_ghost || player == yellow_ghost || player == blue_ghost || player == pink_ghost) {
           //
@@ -405,6 +405,153 @@ public class GameView extends View {
     }
     public static boolean getBottom(cell cell) {
         return cell.bottomWall;
+    }
+
+     void pinkyChase() {
+        //cell player = player;
+        if (player != pink_ghost) {
+            float ghostCenterX = hMar + (pink_ghost.col) * cellSize;
+            float ghostCenterY = vMar + GameView.getRow(pink_ghost) * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + GameView.getRow(player) * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            if (dx > dy) {
+                //moveLeft *if pinky cell is not a left wall
+                if ( (pink_ghost.col) > (player.col) - 1 )  {
+                   //pink_ghost.col = pink_ghost.col - 1;
+                    pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];
+                } else if (!pink_ghost.rightWall) {
+                    //move right
+                    pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];
+                }
+            } else {
+                if ( (pink_ghost.row) > (player.row) - 1 && !pink_ghost.topWall) {
+                    //move up *if pinky cell is not a top wall
+                    pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];
+                } else if (!pink_ghost.bottomWall)  {
+                    //move down
+                    pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];
+                }
+            }
+        }
+
+    }
+
+    void blinkyChase() {
+        //cell player = player;
+        if (player != red_ghost) {
+            float ghostCenterX = hMar + (red_ghost.col) * cellSize;
+            float ghostCenterY = vMar + GameView.getRow(red_ghost) * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + GameView.getRow(player) * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            if (dx > dy) {
+                //moveLeft *if pinky cell is not a left wall
+                if ( (red_ghost.col) > (player.col) + 1 && !red_ghost.leftWall)  {
+                    //red_ghost.col = red_ghost.col - 1;
+                    red_ghost= cells[red_ghost.col-1][red_ghost.row];
+                } else if (!red_ghost.rightWall) {
+                    //move right
+                    red_ghost= cells[red_ghost.col+1][red_ghost.row];
+                }
+            } else {
+                if ( (red_ghost.row) > (player.row) + 1 && !red_ghost.topWall) {
+                    //move up *if pinky cell is not a top wall
+                    red_ghost= cells[red_ghost.col][red_ghost.row - 1];
+                } else if (!red_ghost.bottomWall)  {
+                    //move down
+                    red_ghost= cells[red_ghost.col][red_ghost.row + 1];
+                }
+            }
+        }
+
+    }
+
+    void inkyChase() {
+        //cell player = player;
+        if (player != blue_ghost) {
+            float ghostCenterX = hMar + (blue_ghost.col) * cellSize;
+            float ghostCenterY = vMar + GameView.getRow(blue_ghost) * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + GameView.getRow(player) * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            if (dx > dy) {
+                //moveLeft *if pinky cell is not a left wall
+                if ( (blue_ghost.col) > (player.col) && !blue_ghost.leftWall)  {
+                    //blue_ghost.col = blue_ghost.col - 1;
+                    blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];
+                } else if (!blue_ghost.rightWall) {
+                    //move right
+                    blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];
+                }
+            } else {
+                if ( (blue_ghost.row) > (player.row)  && !blue_ghost.topWall) {
+                    //move up *if pinky cell is not a top wall
+                    blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];
+                } else if (!blue_ghost.bottomWall)  {
+                    //move down
+                    blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];
+                }
+            }
+        }
+
+    }
+
+    void clydeChase() {
+        //cell player = player;
+        if (player != pink_ghost) {
+            float ghostCenterX = hMar + (pink_ghost.col) * cellSize;
+            float ghostCenterY = vMar + GameView.getRow(pink_ghost) * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + GameView.getRow(player) * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            double rand = Math.random();
+            //sometimes he flees
+            if (rand < 0.51) {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((pink_ghost.col) > (player.col) && !pink_ghost.leftWall) {
+                        //pink_ghost.col = pink_ghost.col - 1;
+                        pink_ghost = cells[pink_ghost.col - 1][pink_ghost.row];
+                    } else if (!pink_ghost.rightWall) {
+                        //move right
+                        pink_ghost = cells[pink_ghost.col + 1][pink_ghost.row];
+                    }
+                } else {
+                    if ((pink_ghost.row) > (player.row) && !pink_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        pink_ghost = cells[pink_ghost.col][pink_ghost.row - 1];
+                    } else if (!pink_ghost.bottomWall) {
+                        //move down
+                        pink_ghost = cells[pink_ghost.col][pink_ghost.row + 1];
+                    }
+                }
+            } else {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((pink_ghost.col) > (player.col) && !pink_ghost.leftWall) {
+                        //pink_ghost.col = pink_ghost.col - 1;
+                        pink_ghost = cells[pink_ghost.col + 1][pink_ghost.row];
+                    } else if (!pink_ghost.rightWall) {
+                        //move right
+                        pink_ghost = cells[pink_ghost.col - 1][pink_ghost.row];
+                    }
+                } else {
+                    if ((pink_ghost.row) > (player.row) && !pink_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        pink_ghost = cells[pink_ghost.col][pink_ghost.row + 1];
+                    } else if (!pink_ghost.bottomWall) {
+                        //move down
+                        pink_ghost = cells[pink_ghost.col][pink_ghost.row - 1];
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
