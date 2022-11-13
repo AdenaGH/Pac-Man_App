@@ -33,14 +33,16 @@ public class GameView extends View {
             {10,1,4,4,11,3,0,3,7,10},
             {6,4,11,11,3,4,4,4,4,8}
     };
-    private final int[][] redpathlist={{2,5},{3,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
-    Queue<int[]> redq = new LinkedList<>(Arrays.asList(redpathlist));
-    private final int[][] yellowpathlist={{4,5},{3,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
-    Queue<int[]> yellowq = new LinkedList<>(Arrays.asList(yellowpathlist));
-    private final int[][] bluepathlist={{2,4},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
-    Queue<int[]> blueq = new LinkedList<>(Arrays.asList(bluepathlist));
-    private final int[][] pinkpathlist={{4,5},{3,4},{3,3},{2,3},{1,3},{0,3},{0,4},{0,5},{0,6},{1,6},{2,6},{3,6},{4,6},{5,6},{6,6},{6,5},{5,5},{5,4},{5,3},{4,3}};
-    Queue<int[]> pinkq = new LinkedList<>(Arrays.asList(pinkpathlist));
+
+    Queue<int[]> redq = new LinkedList<>(Arrays.asList(new int[][]{{2,5},{3,5},{3,4},{3,3}}));
+    Queue<int[]> yellowq = new LinkedList<>(Arrays.asList(new int[][]{{4,5},{3,5},{3,4},{3,3}}));
+    Queue<int[]> blueq = new LinkedList<>(Arrays.asList(new int[][]{{4,4},{3,4},{3,3}}));
+    Queue<int[]> pinkq = new LinkedList<>(Arrays.asList(new int[][]{{2,4},{3,4},{3,3}}));
+    int redcounter=0;
+    int yellowcounter=0;
+    int bluecounter=0;
+    int pinkcounter=0;
+
     private cell[][] cells;
     private cell player;
     private cell blue_ghost;
@@ -85,19 +87,21 @@ public class GameView extends View {
         pellets = new Paint();
         pellets.setColor(Color.YELLOW);
         createMaze();
+        TimerTask redstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= redq.poll();
+                red_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                redcounter+=1;
+            }
+
+        };
         TimerTask redmove = new TimerTask() {
 
             @Override
             public void run() {
-                int[] pos= redq.poll();
-                if(pos[0]==2||pos[0]==3||pos[0]==4){
-                    if(pos[1]!=4&&pos[1]!=5){
-                        redq.add(pos);
-                    }
-                }else{
-                    redq.add(pos);
-                }
-                red_ghost=cells[pos[0]][pos[1]];
+                redchase();
                 if(player==red_ghost){
                     player=cells[3][9];
                     lives = lives-1;
@@ -107,19 +111,21 @@ public class GameView extends View {
                 invalidate();
             }
         };
+        TimerTask bluestart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= blueq.poll();
+                blue_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                bluecounter+=1;
+
+            }
+        };
         TimerTask bluemove = new TimerTask() {
 
             @Override
             public void run() {
-                int[] pos= blueq.poll();
-                if(pos[0]==2||pos[0]==3||pos[0]==4){
-                    if(pos[1]!=4&&pos[1]!=5){
-                        blueq.add(pos);
-                    }
-                }else{
-                    blueq.add(pos);
-                }
-                blue_ghost=cells[pos[0]][pos[1]];
+                bluechase();
                 if(player==blue_ghost){
                     player=cells[3][9];
                     lives = lives-1;
@@ -129,19 +135,21 @@ public class GameView extends View {
                 invalidate();
             }
         };
+        TimerTask yellowstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= yellowq.poll();
+                yellow_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                yellowcounter+=1;
+            }
+        };
+
         TimerTask yellowmove = new TimerTask() {
 
             @Override
             public void run() {
-                int[] pos= yellowq.poll();
-                if(pos[0]==2||pos[0]==3||pos[0]==4){
-                    if(pos[1]!=4&&pos[1]!=5){
-                        yellowq.add(pos);
-                    }
-                }else{
-                    yellowq.add(pos);
-                }
-                yellow_ghost=cells[pos[0]][pos[1]];
+                clydeChase();
                 if(player==yellow_ghost){
                     player=cells[3][9];
                     lives = lives-1;
@@ -151,19 +159,23 @@ public class GameView extends View {
                 invalidate();
             }
         };
+
+        TimerTask pinkstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= pinkq.poll();
+                pink_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                pinkcounter+=1;
+
+            }
+        };
+
         TimerTask pinkmove = new TimerTask() {
 
             @Override
             public void run() {
-                int[] pos= pinkq.poll();
-                if(pos[0]==2||pos[0]==3||pos[0]==4){
-                    if(pos[1]!=4&&pos[1]!=5){
-                        pinkq.add(pos);
-                    }
-                }else{
-                    pinkq.add(pos);
-                }
-                pink_ghost=cells[pos[0]][pos[1]];
+                pinkchase();
                 if(player==pink_ghost){
                     player=cells[3][9];
                     lives = lives-1;
@@ -173,11 +185,188 @@ public class GameView extends View {
                 invalidate();
             }
         };
-        t.schedule(redmove,0,750);
-        t.schedule(yellowmove,2000,1000);
-        t.schedule(bluemove,4000,1200);
-        t.schedule(pinkmove,6000,1000);
+        TimerTask cancel =new TimerTask() {
+            @Override
+            public void run() {
+                if(redcounter==4){
+                    redstart.cancel();
+                }
+                if(yellowcounter==4){
+                    yellowstart.cancel();
+                }
+                if(bluecounter==3){
+                    bluestart.cancel();
+                }
+                if(pinkcounter==3){
+                    pinkstart.cancel();
+                }
+            }
+        };
+        t.schedule(redstart,0,1000);
+        t.schedule(yellowstart,2000,1000);
+        t.schedule(bluestart,4000,1000);
+        t.schedule(pinkstart,5000,1000);
+        t.schedule(cancel,0,1);
+        t.schedule(bluemove,7500,750);
+        t.schedule(redmove,4500,750);
+        t.schedule(pinkmove,8500,7500);
+        t.schedule(yellowmove,6500,750);
+
     }
+
+    void clydeChase() {
+        //cell player = player;
+        if (player != yellow_ghost) {
+            float ghostCenterX = hMar + (yellow_ghost.col) * cellSize;
+            float ghostCenterY = vMar + yellow_ghost.row * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + player.row * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            double rand = Math.random();
+            //sometimes he flees
+            if (rand < 0.77) {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((yellow_ghost.col) > (player.col) && !yellow_ghost.leftWall) {
+                        //yellow_ghost.col = yellow_ghost.col - 1;
+                        yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
+                    } else if (!yellow_ghost.rightWall) {
+                        //move right
+                        yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
+                    }
+                } else {
+                    if ((yellow_ghost.row) > (player.row) && !yellow_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row - 1];
+                    } else if (!yellow_ghost.bottomWall) {
+                        //move down
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row + 1];
+                    }
+                }
+            } else {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((yellow_ghost.col) > (player.col) && !yellow_ghost.leftWall) {
+                        //yellow_ghost.col = yellow_ghost.col - 1;
+                        yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
+                    } else if (!yellow_ghost.rightWall) {
+                        //move right
+                        yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
+                    }
+                } else {
+                    if ((yellow_ghost.row) > (player.row) && !yellow_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row + 1];
+                    } else if (!yellow_ghost.bottomWall) {
+                        //move down
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row - 1];
+                    }
+                }
+            }
+        }
+
+    }
+    void redchase(){
+        int dx = Math.abs(red_ghost.col- player.col);
+        int dy = Math.abs(red_ghost.row- player.row);
+        if (dx > dy) {
+            if((red_ghost.col) > (player.col)-1){
+                if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+
+            }else{
+                if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+
+            }
+        }else{
+            if((red_ghost.row) > (player.row)-1){
+                if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+
+            }else{
+                if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+
+
+            }
+        }
+
+    }
+
+
+    void pinkchase(){
+        int dx = Math.abs(pink_ghost.col- player.col);
+        int dy = Math.abs(pink_ghost.row- player.row);
+        if (dx > dy) {
+            if((pink_ghost.col) > (player.col)-1){
+                if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+            }else{
+                if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+            }
+        }else{
+            if((pink_ghost.row) > (player.row)-1){
+                if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+            }else{
+                if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+
+            }
+        }
+
+    }
+    void bluechase(){
+        int dx = Math.abs(blue_ghost.col- player.col);
+        int dy = Math.abs(blue_ghost.row- player.row);
+        if (dx > dy) {
+            if((blue_ghost.col) > (player.col)){
+                if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+            }else{
+                if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+            }
+        }else{
+            if((blue_ghost.row) > (player.row)){
+                if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+            }else{
+                if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+
+            }
+        }
+
+    }
+
 
     private void createMaze(){
         cells=new cell[COLS][ROWS];
@@ -245,9 +434,9 @@ public class GameView extends View {
             }
         }
         player=cells[3][9];
-        blue_ghost=cells[2][4];
+        blue_ghost=cells[4][4];
         red_ghost=cells[2][5];
-        pink_ghost=cells[4][4];
+        pink_ghost=cells[2][4];
         yellow_ghost=cells[4][5];
 
 
