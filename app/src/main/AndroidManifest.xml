@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".game"
+            android:name=".End"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

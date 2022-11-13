@@ -17,6 +17,7 @@ public class End extends AppCompatActivity {
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Restart works");
                 setContentView(R.layout.initial_configuration);
                 Intent intent = new Intent(End.this, configure.class);
                 startActivity(intent);
@@ -25,7 +26,9 @@ public class End extends AppCompatActivity {
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                finishAffinity();
+//                System.exit(0);
+
             }
         });
     }

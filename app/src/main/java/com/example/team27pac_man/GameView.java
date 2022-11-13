@@ -2,6 +2,7 @@ package com.example.team27pac_man;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -100,9 +102,13 @@ public class GameView extends View {
                 redchase();
                 if(player==red_ghost){
                     player=cells[3][9];
-                    lives = lives-1;
-                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
-                    live.setText("Lives:"+lives);
+                    if(lives == 1){
+                        checkLives();
+                    } else {
+                        lives = lives - 1;
+                        TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
+                        live.setText("Lives:" + lives);
+                    }
                 }
                 invalidate();
             }
@@ -124,9 +130,13 @@ public class GameView extends View {
                 bluechase();
                 if(player==blue_ghost){
                     player=cells[3][9];
-                    lives = lives-1;
-                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
-                    live.setText("Lives:"+lives);
+                    if(lives == 1){
+                        checkLives();
+                    } else {
+                        lives = lives - 1;
+                        TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
+                        live.setText("Lives:" + lives);
+                    }
                 }
                 invalidate();
             }
@@ -148,9 +158,13 @@ public class GameView extends View {
                 clydeChase();
                 if(player==yellow_ghost){
                     player=cells[3][9];
-                    lives = lives-1;
-                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
-                    live.setText("Lives:"+lives);
+                    if(lives == 1){
+                        checkLives();
+                    } else {
+                        lives = lives - 1;
+                        TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
+                        live.setText("Lives:" + lives);
+                    }
                 }
                 invalidate();
             }
@@ -174,9 +188,13 @@ public class GameView extends View {
                 pinkchase();
                 if(player==pink_ghost){
                     player=cells[3][9];
-                    lives = lives-1;
-                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
-                    live.setText("Lives:"+lives);
+                    if(lives == 1){
+                        checkLives();
+                    } else {
+                        lives = lives - 1;
+                        TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
+                        live.setText("Lives:" + lives);
+                    }
                 }
                 invalidate();
             }
@@ -207,6 +225,25 @@ public class GameView extends View {
         t.schedule(redmove,4500,750);
         t.schedule(pinkmove,8500,7500);
         t.schedule(yellowmove,6500,750);
+
+    }
+    void checkLives(){
+
+//        System.out.println("checkLives");
+        Activity a = (Activity)context;
+        a.runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                a.setContentView(R.layout.end);
+                Intent intent = new Intent(a, End.class);
+                a.finish();
+                a.startActivity(intent);
+            }
+        });
+//        Activity a = (Activity)context;
+//        a.setContentView(R.layout.end);
+        //Intent intent = new Intent(this.getContext(), End.class);
+//        a.startActivity(intent);
 
     }
 
