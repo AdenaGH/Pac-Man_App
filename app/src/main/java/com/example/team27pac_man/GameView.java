@@ -14,10 +14,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import java.security.cert.TrustAnchor;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameView extends View {
     Context context;
+    private static int lives =configure.getLives();
     private static int score=0;
     private enum Direction{UP,DOWN,LEFT,RIGHT}
     //TODO
@@ -27,6 +32,15 @@ public class GameView extends View {
     private int [][] layout;
 //    private Canvas gameCanvas;
     private String pacPostion = "right";
+
+    Queue<int[]> redq = new LinkedList<>(Arrays.asList(new int[][]{{2,5},{3,5},{3,4},{3,3}}));
+    Queue<int[]> yellowq = new LinkedList<>(Arrays.asList(new int[][]{{4,5},{3,5},{3,4},{3,3}}));
+    Queue<int[]> blueq = new LinkedList<>(Arrays.asList(new int[][]{{4,4},{3,4},{3,3}}));
+    Queue<int[]> pinkq = new LinkedList<>(Arrays.asList(new int[][]{{2,4},{3,4},{3,3}}));
+    int redcounter=0;
+    int yellowcounter=0;
+    int bluecounter=0;
+    int pinkcounter=0;
 
     private cell[][] cells;
     private cell player;
@@ -46,6 +60,10 @@ public class GameView extends View {
     Bitmap red;
     Bitmap yellow;
     Bitmap pink;
+
+    Timer t = new Timer();
+
+
     public static int getScore(){
         return score;
     }
@@ -65,8 +83,285 @@ public class GameView extends View {
         pellets.setColor(Color.YELLOW);
         selectLayout();
         createMaze();
+        TimerTask redstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= redq.poll();
+                red_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                redcounter+=1;
+            }
+
+        };
+        TimerTask redmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                redchase();
+                if(player==red_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask bluestart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= blueq.poll();
+                blue_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                bluecounter+=1;
+
+            }
+        };
+        TimerTask bluemove = new TimerTask() {
+
+            @Override
+            public void run() {
+                bluechase();
+                if(player==blue_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask yellowstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= yellowq.poll();
+                yellow_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                yellowcounter+=1;
+            }
+        };
+
+        TimerTask yellowmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                clydeChase();
+                if(player==yellow_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+
+        TimerTask pinkstart =new TimerTask() {
+            @Override
+            public void run() {
+                int[] pos= pinkq.poll();
+                pink_ghost=cells[pos[0]][pos[1]];
+                invalidate();
+                pinkcounter+=1;
+
+            }
+        };
+
+        TimerTask pinkmove = new TimerTask() {
+
+            @Override
+            public void run() {
+                pinkchase();
+                if(player==pink_ghost){
+                    player=cells[3][9];
+                    lives = lives-1;
+                    TextView live = (TextView) ((Maze)context).findViewById(R.id.livesTextView);
+                    live.setText("Lives:"+lives);
+                }
+                invalidate();
+            }
+        };
+        TimerTask cancel =new TimerTask() {
+            @Override
+            public void run() {
+                if(redcounter==4){
+                    redstart.cancel();
+                }
+                if(yellowcounter==4){
+                    yellowstart.cancel();
+                }
+                if(bluecounter==3){
+                    bluestart.cancel();
+                }
+                if(pinkcounter==3){
+                    pinkstart.cancel();
+                }
+            }
+        };
+        t.schedule(redstart,0,1000);
+        t.schedule(yellowstart,2000,1000);
+        t.schedule(bluestart,4000,1000);
+        t.schedule(pinkstart,5000,1000);
+        t.schedule(cancel,0,1);
+        t.schedule(bluemove,7500,750);
+        t.schedule(redmove,4500,750);
+        t.schedule(pinkmove,8500,7500);
+        t.schedule(yellowmove,6500,750);
+
     }
 
+    void clydeChase() {
+        //cell player = player;
+        if (player != yellow_ghost) {
+            float ghostCenterX = hMar + (yellow_ghost.col) * cellSize;
+            float ghostCenterY = vMar + yellow_ghost.row * cellSize;
+            float playerCenterX = hMar + (player.col) * cellSize;
+            float playerCenterY = hMar + player.row * cellSize;
+            float dx = Math.abs(playerCenterX - ghostCenterX);
+            float dy = Math.abs(playerCenterY - ghostCenterY);
+            double rand = Math.random();
+            //sometimes he flees
+            if (rand < 0.77) {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((yellow_ghost.col) > (player.col) && !yellow_ghost.leftWall) {
+                        //yellow_ghost.col = yellow_ghost.col - 1;
+                        yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
+                    } else if (!yellow_ghost.rightWall) {
+                        //move right
+                        yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
+                    }
+                } else {
+                    if ((yellow_ghost.row) > (player.row) && !yellow_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row - 1];
+                    } else if (!yellow_ghost.bottomWall) {
+                        //move down
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row + 1];
+                    }
+                }
+            } else {
+                if (dx > dy) {
+                    //moveLeft *if pinky cell is not a left wall
+                    if ((yellow_ghost.col) > (player.col) && !yellow_ghost.leftWall) {
+                        //yellow_ghost.col = yellow_ghost.col - 1;
+                        yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
+                    } else if (!yellow_ghost.rightWall) {
+                        //move right
+                        yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
+                    }
+                } else {
+                    if ((yellow_ghost.row) > (player.row) && !yellow_ghost.topWall) {
+                        //move up *if pinky cell is not a top wall
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row + 1];
+                    } else if (!yellow_ghost.bottomWall) {
+                        //move down
+                        yellow_ghost = cells[yellow_ghost.col][yellow_ghost.row - 1];
+                    }
+                }
+            }
+        }
+
+    }
+    void redchase(){
+        int dx = Math.abs(red_ghost.col- player.col);
+        int dy = Math.abs(red_ghost.row- player.row);
+        if (dx > dy) {
+            if((red_ghost.col) > (player.col)-1){
+                if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+
+            }else{
+                if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+
+            }
+        }else{
+            if((red_ghost.row) > (player.row)-1){
+                if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+                else if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+
+            }else{
+                if(!red_ghost.bottomWall){red_ghost= cells[red_ghost.col][red_ghost.row + 1];}
+                else if(!red_ghost.leftWall){red_ghost= cells[red_ghost.col-1][red_ghost.row];}
+                else if(!red_ghost.topWall){red_ghost= cells[red_ghost.col][red_ghost.row - 1];}
+                else if(!red_ghost.rightWall){red_ghost= cells[red_ghost.col+1][red_ghost.row];}
+
+
+            }
+        }
+
+    }
+
+
+    void pinkchase(){
+        int dx = Math.abs(pink_ghost.col- player.col);
+        int dy = Math.abs(pink_ghost.row- player.row);
+        if (dx > dy) {
+            if((pink_ghost.col) > (player.col)-1){
+                if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+            }else{
+                if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+            }
+        }else{
+            if((pink_ghost.row) > (player.row)-1){
+                if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+            }else{
+                if(!pink_ghost.bottomWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row + 1];}
+                else if(!pink_ghost.leftWall){pink_ghost= cells[pink_ghost.col-1][pink_ghost.row];}
+                else if(!pink_ghost.rightWall){pink_ghost= cells[pink_ghost.col+1][pink_ghost.row];}
+                else if(!pink_ghost.topWall){pink_ghost= cells[pink_ghost.col][pink_ghost.row - 1];}
+
+            }
+        }
+
+    }
+    void bluechase(){
+        int dx = Math.abs(blue_ghost.col- player.col);
+        int dy = Math.abs(blue_ghost.row- player.row);
+        if (dx > dy) {
+            if((blue_ghost.col) > (player.col)){
+                if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+            }else{
+                if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+            }
+        }else{
+            if((blue_ghost.row) > (player.row)){
+                if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+            }else{
+                if(!blue_ghost.bottomWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row + 1];}
+                else if(!blue_ghost.rightWall){blue_ghost= cells[blue_ghost.col+1][blue_ghost.row];}
+                else if(!blue_ghost.leftWall){blue_ghost= cells[blue_ghost.col-1][blue_ghost.row];}
+                else if(!blue_ghost.topWall){blue_ghost= cells[blue_ghost.col][blue_ghost.row - 1];}
+
+            }
+        }
+
+    }
     private void selectLayout() {
         if(configure.getDifficulty().equals("Passive")){
             layout = new int[][]{
@@ -190,9 +485,9 @@ public class GameView extends View {
             }
         }
         player=cells[3][9];
-        blue_ghost=cells[2][4];
+        blue_ghost=cells[4][4];
         red_ghost=cells[2][5];
-        pink_ghost=cells[4][4];
+        pink_ghost=cells[2][4];
         yellow_ghost=cells[4][5];
 
 
@@ -200,7 +495,6 @@ public class GameView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        gameCanvas = canvas;
         canvas.drawColor(Color.BLACK);
         int width = getWidth();
         int height =getHeight();
@@ -316,7 +610,6 @@ public class GameView extends View {
             rotatePacDown();
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
-
 
 
         blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
