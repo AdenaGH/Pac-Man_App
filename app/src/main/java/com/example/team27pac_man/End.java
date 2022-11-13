@@ -27,7 +27,7 @@ public class End extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finishAffinity();
-//                System.exit(0);
+                System.exit(0);
 
             }
         });
