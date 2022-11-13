@@ -26,8 +26,9 @@ public class End extends AppCompatActivity {
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finishAndRemoveTask();
                 finishAffinity();
-                System.exit(0);
+                //System.exit(0);
 
             }
         });
