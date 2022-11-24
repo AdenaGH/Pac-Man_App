@@ -657,6 +657,7 @@ public class GameView extends View {
         canvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
         yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
         canvas.drawBitmap(yellow,(yellow_ghost.col*cellSize)+(cellSize/4),(yellow_ghost.row*cellSize)+(cellSize/4),null);
+        //TODO: put dark blue ghost.
 
     }
 
@@ -673,6 +674,7 @@ public class GameView extends View {
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
                             scoreBoost();
+                            powerPelletEaten();
                         }else{
 //                            score=score+1;
                             scoreIncrement();
@@ -697,6 +699,7 @@ public class GameView extends View {
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
                             scoreBoost();
+                            powerPelletEaten();
                         }else{
 //                            score=score+1;
                             scoreIncrement();
@@ -724,6 +727,7 @@ public class GameView extends View {
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
                             scoreBoost();
+                            powerPelletEaten();
                         }else{
                             //score=score+1;
                             scoreIncrement();
@@ -750,6 +754,7 @@ public class GameView extends View {
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
                             scoreBoost();
+                            powerPelletEaten();
                         }else{
 //                            score=score+1;
                             scoreIncrement();
@@ -765,6 +770,53 @@ public class GameView extends View {
                 break;
         }
         invalidate();
+
+    }
+
+    private void powerPelletEaten() {
+        //TODO: Change ghost image.
+
+        if (player == red_ghost) {
+            eatGhost(red_ghost);
+        } else if (player == blue_ghost) {
+            eatGhost(blue_ghost);
+        } else if (player == pink_ghost) {
+            eatGhost(pink_ghost);
+        } else if (player == yellow_ghost) {
+            eatGhost(yellow_ghost);
+        }
+
+        //TODO: all timer functionality.
+        //TODO: have ghosts flee player.
+
+    }
+
+    private void eatGhost(cell ghost) {
+        //increment and display score
+        score += 25;
+        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+        scoreText.setText("Score: " + score);
+        scoreText.invalidate();
+
+
+        //reset ghost position
+        if (ghost == red_ghost) {
+            int[] pos= redq.poll();
+            red_ghost=cells[pos[0]][pos[1]];
+            //TODO change image.
+        } else if (ghost == blue_ghost) {
+            int[] pos= blueq.poll();
+            blue_ghost=cells[pos[0]][pos[1]];
+            //TODO change image.
+        } else if (ghost == pink_ghost) {
+            int[] pos= pinkq.poll();
+            pink_ghost=cells[pos[0]][pos[1]];
+            //TODO change image.
+        } else if (ghost == yellow_ghost) {
+            int[] pos= yellowq.poll();
+            yellow_ghost=cells[pos[0]][pos[1]];
+            //TODO change image.
+        }
 
     }
 
