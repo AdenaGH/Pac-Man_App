@@ -657,7 +657,7 @@ public class GameView extends View {
         canvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
         yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
         canvas.drawBitmap(yellow,(yellow_ghost.col*cellSize)+(cellSize/4),(yellow_ghost.row*cellSize)+(cellSize/4),null);
-        //TODO: put dark blue ghost.
+
 
     }
 
@@ -772,10 +772,28 @@ public class GameView extends View {
         invalidate();
 
     }
+    TimerTask ghostReset = new TimerTask() {
+        @Override
+        public void run() {
+            blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
+            pink=BitmapFactory.decodeResource(getResources(),R.drawable.pink);
+            red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
+            yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
+            //call original chase methods or restart timertask?
+        }
+    }
+
 
     private void powerPelletEaten() {
-        //TODO: Change ghost image.
-
+        blue=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+        red=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+        yellow=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+        pink=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+        flee(red_ghost);
+        flee(blue_ghost);
+        flee(yellow_ghost);
+        flee(pink_ghost);
+        t.schedule(ghostReset,500);
         if (player == red_ghost) {
             eatGhost(red_ghost);
         } else if (player == blue_ghost) {
@@ -803,21 +821,54 @@ public class GameView extends View {
         if (ghost == red_ghost) {
             int[] pos= redq.poll();
             red_ghost=cells[pos[0]][pos[1]];
-            //TODO change image.
+            red = BitmapFactory.decodeResource(getResources(),R.drawable.red);
         } else if (ghost == blue_ghost) {
             int[] pos= blueq.poll();
             blue_ghost=cells[pos[0]][pos[1]];
-            //TODO change image.
+            blue  =BitmapFactory.decodeResource(getResources(),R.drawable.blue);
         } else if (ghost == pink_ghost) {
             int[] pos= pinkq.poll();
             pink_ghost=cells[pos[0]][pos[1]];
-            //TODO change image.
+            pink =BitmapFactory.decodeResource(getResources(),R.drawable.pink);
         } else if (ghost == yellow_ghost) {
             int[] pos= yellowq.poll();
             yellow_ghost=cells[pos[0]][pos[1]];
-            //TODO change image.
+            yellow =BitmapFactory.decodeResource(getResources(),R.drawable.yellow);
         }
 
+    }
+
+    private void flee(cell ghost) {
+        //need to cancel original timertask for the individual chases?
+        //
+        int dx = Math.abs(ghost.col- player.col);
+        int dy = Math.abs(ghost.row- player.row);
+        if (dx > dy) {
+            if((ghost.col) > (player.col)){
+                if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
+            }else{
+                if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
+            }
+        }else{
+            if((ghost.row) > (player.row)){
+                if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
+            }else{
+                if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
+                else if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
+
+            }
+        }
     }
 
     private void rotatePacRight() {
