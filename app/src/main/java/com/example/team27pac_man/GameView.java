@@ -105,7 +105,7 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 redchase();
                 if(player==red_ghost && !redVulnerable){
                     player=cells[3][9];
@@ -120,8 +120,9 @@ public class GameView extends View {
                     red_ghost=cells[2][5];
                     redVulnerable = false;
                     score += 25;
+                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                     scoreText.setText("Score:" + score);
-                    scoreText.invalidate();
+                    //scoreText.invalidate();
                 }
                 invalidate();
             }
@@ -140,7 +141,7 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+
                 bluechase();
                 if(player==blue_ghost && !blueVulnerable){
                     player=cells[3][9];
@@ -154,8 +155,9 @@ public class GameView extends View {
                 }  else if (player==blue_ghost && blueVulnerable) {
                     blueVulnerable = false;
                     score += 25;
+                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                     scoreText.setText("Score:" + score);
-                    scoreText.invalidate();
+                    //scoreText.invalidate();
                     blue_ghost=cells[4][4];
                 }
                 invalidate();
@@ -174,7 +176,6 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 clydeChase();
                 if(player==yellow_ghost && !yellowVulnerable){
@@ -189,8 +190,9 @@ public class GameView extends View {
                 } else if (player==yellow_ghost && yellowVulnerable) {
                     yellowVulnerable = false;
                     score += 25;
+                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                     scoreText.setText("Score:" + score);
-                    scoreText.invalidate();
+                    //scoreText.invalidate();
                     int[] pos= yellowq.poll();
                     yellow_ghost=cells[4][5];
                 }
@@ -213,7 +215,7 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 pinkchase();
                 if(player==pink_ghost && !pinkVulnerable){
                     player=cells[3][9];
@@ -227,8 +229,9 @@ public class GameView extends View {
                 }  else if (player==pink_ghost && pinkVulnerable) {
                     pinkVulnerable = false;
                     score += 25;
+                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                     scoreText.setText("Score:" + score);
-                    scoreText.invalidate();
+                    //scoreText.invalidate();
                     int[] pos= pinkq.poll();
                     pink_ghost=cells[2][4];
                 }
