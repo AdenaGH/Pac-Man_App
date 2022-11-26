@@ -32,7 +32,7 @@ public class GameView extends View {
     //assign "layout" to a specific layoutIds later depending on the level
     // make separate methods scoreBoost(), and incrementScore()
     private int [][] layout;
-//    private Canvas gameCanvas;
+    private Canvas gameCanvas;
     private String pacPostion = "right";
 
     Queue<int[]> redq = new LinkedList<>(Arrays.asList(new int[][]{{2,5},{3,5},{3,4},{3,3}}));
@@ -50,6 +50,7 @@ public class GameView extends View {
     private cell pink_ghost;
     private cell red_ghost;
     private cell yellow_ghost;
+    private boolean ghostsVulnerable = false;
     private static final int COLS=7,ROWS=10;
     private float cellSize,hMar,vMar;
     private final float thick = 15;
@@ -623,6 +624,7 @@ public class GameView extends View {
                     );
                 }
             }
+            gameCanvas = canvas;
         }
 //        switch(configure.getPacRes()) {
 //            case 1:
@@ -648,16 +650,25 @@ public class GameView extends View {
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
 
-
-        blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
-        canvas.drawBitmap(blue,(blue_ghost.col*cellSize)+(cellSize/4),(blue_ghost.row*cellSize)+(cellSize/4),null);
-        pink=BitmapFactory.decodeResource(getResources(),R.drawable.pink);
-        canvas.drawBitmap(pink,(pink_ghost.col*cellSize)+(cellSize/4),(pink_ghost.row*cellSize)+(cellSize/4),null);
-        red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
-        canvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
-        yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
-        canvas.drawBitmap(yellow,(yellow_ghost.col*cellSize)+(cellSize/4),(yellow_ghost.row*cellSize)+(cellSize/4),null);
-
+        if (!ghostsVulnerable) {
+            blue = BitmapFactory.decodeResource(getResources(), R.drawable.blue);
+            canvas.drawBitmap(blue, (blue_ghost.col * cellSize) + (cellSize / 4), (blue_ghost.row * cellSize) + (cellSize / 4), null);
+            pink = BitmapFactory.decodeResource(getResources(), R.drawable.pink);
+            canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
+            red = BitmapFactory.decodeResource(getResources(), R.drawable.red);
+            canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
+            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
+            canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
+        } else {
+            blue = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+            canvas.drawBitmap(blue, (blue_ghost.col * cellSize) + (cellSize / 4), (blue_ghost.row * cellSize) + (cellSize / 4), null);
+            pink = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+            canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
+            red = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+            canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
+            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+            canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
+        }
 
     }
 
@@ -781,19 +792,25 @@ public class GameView extends View {
             yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
             //call original chase methods or restart timertask?
         }
-    }
+    };
 
 
     private void powerPelletEaten() {
-        blue=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
-        red=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+        ghostsVulnerable = true;
+        System.out.println("slay??");
+//        blue=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+//        red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
+//        gameCanvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
+        invalidate();
+
         yellow=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
         pink=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
+
         flee(red_ghost);
         flee(blue_ghost);
         flee(yellow_ghost);
         flee(pink_ghost);
-        t.schedule(ghostReset,500);
+        //t.schedule(ghostReset,500);
         if (player == red_ghost) {
             eatGhost(red_ghost);
         } else if (player == blue_ghost) {
@@ -840,35 +857,36 @@ public class GameView extends View {
 
     private void flee(cell ghost) {
         //need to cancel original timertask for the individual chases?
-        //
+        //currently opposite of inky chase
         int dx = Math.abs(ghost.col- player.col);
         int dy = Math.abs(ghost.row- player.row);
         if (dx > dy) {
             if((ghost.col) > (player.col)){
-                if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
-                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
-                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
-                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
+                if(!ghost.leftWall){ghost= cells[ghost.col + 1][ghost.row];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col - 1][ghost.row];}
             }else{
-                if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
-                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
-                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
-                else if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
+                if(!ghost.rightWall){ghost= cells[ghost.col - 1][ghost.row];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.leftWall){ghost= cells[ghost.col + 1][ghost.row];}
             }
         }else{
             if((ghost.row) > (player.row)){
-                if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
-                else if(ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
-                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
-                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
+                if(!ghost.topWall){ghost= cells[ghost.col][ghost.row + 1];}
+                else if(!ghost.leftWall){ghost= cells[ghost.col + 1][ghost.row];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col - 1][ghost.row];}
+                else if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row - 1];}
             }else{
-                if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row + 1];}
-                else if(!ghost.rightWall){ghost= cells[ghost.col+1][ghost.row];}
-                else if(!ghost.leftWall){ghost= cells[ghost.col-1][ghost.row];}
-                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row - 1];}
+                if(!ghost.bottomWall){ghost= cells[ghost.col][ghost.row - 1];}
+                else if(!ghost.rightWall){ghost= cells[ghost.col - 1][ghost.row];}
+                else if(!ghost.leftWall){ghost= cells[ghost.col + 1][ghost.row];}
+                else if(!ghost.topWall){ghost= cells[ghost.col][ghost.row + 1];}
 
             }
         }
+        invalidate(); //i think this will like redraw everything?? its called after other chase methods
     }
 
     private void rotatePacRight() {
