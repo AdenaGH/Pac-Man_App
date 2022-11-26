@@ -50,7 +50,10 @@ public class GameView extends View {
     private cell pink_ghost;
     private cell red_ghost;
     private cell yellow_ghost;
-    private boolean ghostsVulnerable = false;
+    private boolean redVulnerable = false;
+    private boolean blueVulnerable = false;
+    private boolean pinkVulnerable = false;
+    private boolean yellowVulnerable = false;
     private static final int COLS=7,ROWS=10;
     private float cellSize,hMar,vMar;
     private final float thick = 15;
@@ -101,7 +104,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 redchase();
-                if(player==red_ghost){
+                if(player==red_ghost && !redVulnerable){
                     player=cells[3][9];
                     if(lives == 1){
                         checkLives();
@@ -110,6 +113,8 @@ public class GameView extends View {
                         TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
                         live.setText("Lives:" + lives);
                     }
+                }  else if (player==red_ghost && redVulnerable) {
+                    red_ghost=cells[2][5];
                 }
                 invalidate();
             }
@@ -129,7 +134,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 bluechase();
-                if(player==blue_ghost){
+                if(player==blue_ghost && !blueVulnerable){
                     player=cells[3][9];
                     if(lives == 1){
                         checkLives();
@@ -138,6 +143,8 @@ public class GameView extends View {
                         TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
                         live.setText("Lives:" + lives);
                     }
+                }  else if (player==blue_ghost && blueVulnerable) {
+                    blue_ghost=cells[4][4];
                 }
                 invalidate();
             }
@@ -145,8 +152,7 @@ public class GameView extends View {
         TimerTask yellowstart =new TimerTask() {
             @Override
             public void run() {
-                int[] pos= yellowq.poll();
-                yellow_ghost=cells[pos[0]][pos[1]];
+                yellow_ghost=cells[0][1];
                 invalidate();
                 yellowcounter+=1;
             }
@@ -157,7 +163,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 clydeChase();
-                if(player==yellow_ghost){
+                if(player==yellow_ghost && !yellowVulnerable){
                     player=cells[3][9];
                     if(lives == 1){
                         checkLives();
@@ -166,6 +172,9 @@ public class GameView extends View {
                         TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
                         live.setText("Lives:" + lives);
                     }
+                } else if (player==yellow_ghost && yellowVulnerable) {
+                    int[] pos= yellowq.poll();
+                    yellow_ghost=cells[4][5];
                 }
                 invalidate();
             }
@@ -187,7 +196,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 pinkchase();
-                if(player==pink_ghost){
+                if(player==pink_ghost && !pinkVulnerable){
                     player=cells[3][9];
                     if(lives == 1){
                         checkLives();
@@ -196,6 +205,9 @@ public class GameView extends View {
                         TextView live = (TextView) ((Maze) context).findViewById(R.id.livesTextView);
                         live.setText("Lives:" + lives);
                     }
+                }  else if (player==pink_ghost && pinkVulnerable) {
+                    int[] pos= pinkq.poll();
+                    pink_ghost=cells[2][4];
                 }
                 invalidate();
             }
@@ -649,26 +661,32 @@ public class GameView extends View {
             rotatePacDown();
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
-
-        if (!ghostsVulnerable) {
+        
+        if (!blueVulnerable) {
             blue = BitmapFactory.decodeResource(getResources(), R.drawable.blue);
-            canvas.drawBitmap(blue, (blue_ghost.col * cellSize) + (cellSize / 4), (blue_ghost.row * cellSize) + (cellSize / 4), null);
-            pink = BitmapFactory.decodeResource(getResources(), R.drawable.pink);
-            canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
-            red = BitmapFactory.decodeResource(getResources(), R.drawable.red);
-            canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
-            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
-            canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
         } else {
             blue = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
-            canvas.drawBitmap(blue, (blue_ghost.col * cellSize) + (cellSize / 4), (blue_ghost.row * cellSize) + (cellSize / 4), null);
-            pink = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
-            canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
-            red = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
-            canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
-            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
-            canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
         }
+        if (!redVulnerable) {
+            red = BitmapFactory.decodeResource(getResources(), R.drawable.red);
+        } else {
+            red = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+        }
+        if (!pinkVulnerable) {
+            pink = BitmapFactory.decodeResource(getResources(), R.drawable.pink);
+        } else {
+            pink = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+        }
+        if (!yellowVulnerable) {
+            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
+        } else {
+            yellow = BitmapFactory.decodeResource(getResources(), R.drawable.vulnerable_ghost2);
+        }
+        canvas.drawBitmap(blue, (blue_ghost.col * cellSize) + (cellSize / 4), (blue_ghost.row * cellSize) + (cellSize / 4), null);
+        canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
+        canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
+        canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
+        
 
     }
 
@@ -796,15 +814,11 @@ public class GameView extends View {
 
 
     private void powerPelletEaten() {
-        ghostsVulnerable = true;
-        System.out.println("slay??");
-//        blue=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
-//        red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
-//        gameCanvas.drawBitmap(red,(red_ghost.col*cellSize)+(cellSize/4),(red_ghost.row*cellSize)+(cellSize/4),null);
+        redVulnerable = true;
+        blueVulnerable = true;
+        pinkVulnerable = true;
+        yellowVulnerable = true;
         invalidate();
-
-        yellow=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
-        pink=BitmapFactory.decodeResource(getResources(),R.drawable.vulnerable_ghost2);
 
         flee(red_ghost);
         flee(blue_ghost);
@@ -813,12 +827,16 @@ public class GameView extends View {
         //t.schedule(ghostReset,500);
         if (player == red_ghost) {
             eatGhost(red_ghost);
+            redVulnerable = false;
         } else if (player == blue_ghost) {
             eatGhost(blue_ghost);
+            blueVulnerable = false;
         } else if (player == pink_ghost) {
             eatGhost(pink_ghost);
+            pinkVulnerable = false;
         } else if (player == yellow_ghost) {
             eatGhost(yellow_ghost);
+            yellowVulnerable = true;
         }
 
         //TODO: all timer functionality.
@@ -838,20 +856,17 @@ public class GameView extends View {
         if (ghost == red_ghost) {
             int[] pos= redq.poll();
             red_ghost=cells[pos[0]][pos[1]];
-            red = BitmapFactory.decodeResource(getResources(),R.drawable.red);
         } else if (ghost == blue_ghost) {
             int[] pos= blueq.poll();
             blue_ghost=cells[pos[0]][pos[1]];
-            blue  =BitmapFactory.decodeResource(getResources(),R.drawable.blue);
         } else if (ghost == pink_ghost) {
             int[] pos= pinkq.poll();
             pink_ghost=cells[pos[0]][pos[1]];
-            pink =BitmapFactory.decodeResource(getResources(),R.drawable.pink);
         } else if (ghost == yellow_ghost) {
             int[] pos= yellowq.poll();
             yellow_ghost=cells[pos[0]][pos[1]];
-            yellow =BitmapFactory.decodeResource(getResources(),R.drawable.yellow);
         }
+        invalidate();
 
     }
 
