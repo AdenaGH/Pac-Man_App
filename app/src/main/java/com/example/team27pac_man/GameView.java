@@ -698,7 +698,6 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
-                            isKillable = true; // when pacman eat powerPellet
                             scoreBoost();
                         } else if(player.col == food.col & player.row == food.row){
                             score += 50;
@@ -725,7 +724,6 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col== 0 && player.row == 0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            isKillable = true;
                             scoreBoost();
                         } else if(player.col == food.col & player.row == food.row){
                             score += 50;
@@ -755,7 +753,6 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            isKillable = true;
                             scoreBoost();
                         } else if(player.col == food.col & player.row == food.row){
                             score += 50;
@@ -784,7 +781,6 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            isKillable = true;
                             scoreBoost();
                         } else if(player.col == food.col & player.row == food.row){
                             score += 50;
