@@ -43,8 +43,9 @@ public class GameView extends View {
     int yellowcounter=0;
     int bluecounter=0;
     int pinkcounter=0;
-
+    boolean isKillable;
     private cell[][] cells;
+    private cell food; // for food sprite- have only added the sprite- work on functionality
     private cell player;
     private cell blue_ghost;
     private cell pink_ghost;
@@ -57,6 +58,7 @@ public class GameView extends View {
     private Paint wall;
     private Paint pellets;
     private  Paint power;
+    Bitmap foodSprite;
     Bitmap pac;
     Bitmap blue;
     Bitmap red;
@@ -410,6 +412,7 @@ public class GameView extends View {
                     {10, 1, 4, 4, 11, 3, 0, 3, 7, 10},
                     {6, 4, 11, 11, 0, 4, 4, 4, 4, 8}
             };
+//            food = cells[5][0];
         } else if(configure.getDifficulty().equals("Easy")){
             layout = new int[][]{
                     {5, 11, 11, 3, 0, 3, 3, 3, 3, 7},
@@ -420,6 +423,7 @@ public class GameView extends View {
                     {10, 5, 3, 0, 3, 11, 4, 4, 7, 10},
                     {6, 4, 4, 4, 0, 4, 4, 4, 4, 8}
             };
+//            food = cells[1][2];
         } else if(configure.getDifficulty().equals("Medium")){
             layout = new int[][]{
                     {5, 11, 11, 3, 0, 11, 11, 3, 3, 7},
@@ -430,7 +434,7 @@ public class GameView extends View {
                     {10, 5, 3, 4, 3, 3, 4, 8, 6, 2},
                     {6, 4, 4, 4, 0, 11, 11, 11, 11, 8}
             };
-
+//            food = cells[5][1];
         } else if(configure.getDifficulty().equals("Hard")){
             layout = new int[][]{
                     {5, 11, 11, 3, 0, 11, 3, 3, 11, 7},
@@ -441,7 +445,7 @@ public class GameView extends View {
                     {1, 2, 5, 0, 3, 11, 0, 8, 6, 2},
                     {6, 4, 4, 4, 0, 11, 4, 11, 11, 8}
             };
-
+//            food = cells[4][1];
         } else if(configure.getDifficulty().equals("Expert")){
             layout = new int[][]{
                     {5, 7, 3, 3, 0, 11, 3, 3, 11, 7},
@@ -452,7 +456,7 @@ public class GameView extends View {
                     {10, 5, 11, 0, 0, 11, 0, 8, 6, 2},
                     {6, 4, 4, 4, 0, 11, 4, 11, 11, 8}
             };
-
+//            food = cells[4][2];
         }
     }
 
@@ -526,8 +530,24 @@ public class GameView extends View {
         red_ghost=cells[2][5];
         pink_ghost=cells[2][4];
         yellow_ghost=cells[4][5];
+        selectFoodPos();
 
 
+    }
+
+    private void selectFoodPos() {
+        if (configure.getDifficulty().equals("Passive")){
+            food = cells[5][0];
+        } else if(configure.getDifficulty().equals("Easy")){
+            food = cells[1][2];
+        } else if(configure.getDifficulty().equals("Medium")){
+            food = cells[5][1];
+        } else if(configure.getDifficulty().equals("Hard")){
+            food = cells[4][1];
+        } else if(configure.getDifficulty().equals("Expert")){
+            food = cells[4][2];
+        }
+        food.isFood = true;
     }
 
     @Override
@@ -559,7 +579,11 @@ public class GameView extends View {
                                 pellets
                         );
 
-                    }else {
+                    } else if(cells[x][y].isFood == true){
+                        foodSprite = BitmapFactory.decodeResource(getResources(),R.drawable.food);
+                        canvas.drawBitmap(foodSprite,(food.col*cellSize)+(cellSize/4),(food.row*cellSize)+(cellSize/4),null);
+                    }
+                    else {
                         canvas.drawCircle(
                                 (x)*cellSize+(cellSize/2),
                                 (y)*cellSize+(cellSize/2),
@@ -647,8 +671,10 @@ public class GameView extends View {
             rotatePacDown();
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
-
-
+//        if(player.pellet == true){
+//            foodSprite = BitmapFactory.decodeResource(getResources(),R.drawable.food);
+//            canvas.drawBitmap(foodSprite,(food.col*cellSize)+(cellSize/4),(food.row*cellSize)+(cellSize/4),null);
+//        }
         blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
         canvas.drawBitmap(blue,(blue_ghost.col*cellSize)+(cellSize/4),(blue_ghost.row*cellSize)+(cellSize/4),null);
         pink=BitmapFactory.decodeResource(getResources(),R.drawable.pink);
@@ -664,7 +690,7 @@ public class GameView extends View {
         switch (direction){
             case UP:
                 pacPostion = "up";
-                invalidate();
+                //invalidate();
                 //rotatePacUp();
                 if(!player.topWall){
                     player=cells[player.col][player.row-1];
@@ -672,8 +698,11 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
+                            isKillable = true; // when pacman eat powerPellet
                             scoreBoost();
-                        }else{
+                        } else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
 //                            score=score+1;
                             scoreIncrement();
 
@@ -694,10 +723,13 @@ public class GameView extends View {
                     if(!player.visited){
 
                         player.pellet=false;
-                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                        if((player.col== 0 && player.row == 0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
+                            isKillable = true;
                             scoreBoost();
-                        }else{
+                        } else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
 //                            score=score+1;
                             scoreIncrement();
 
@@ -723,8 +755,11 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
+                            isKillable = true;
                             scoreBoost();
-                        }else{
+                        } else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
                             //score=score+1;
                             scoreIncrement();
 
@@ -749,8 +784,11 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
+                            isKillable = true;
                             scoreBoost();
-                        }else{
+                        } else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
 //                            score=score+1;
                             scoreIncrement();
 
@@ -885,6 +923,7 @@ public class GameView extends View {
         boolean rightWall = false;
         boolean leftWall =false;
         boolean pellet =true;
+        boolean isFood = false;
         boolean visited =false;
         int col,row;
 
