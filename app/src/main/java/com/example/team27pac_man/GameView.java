@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
@@ -91,6 +92,7 @@ public class GameView extends View {
         pellets.setColor(Color.YELLOW);
         selectLayout();
         createMaze();
+        
         TimerTask redstart =new TimerTask() {
             @Override
             public void run() {
@@ -120,8 +122,7 @@ public class GameView extends View {
                     red_ghost=cells[2][5];
                     redVulnerable = false;
                     score += 25;
-                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                    scoreText.setText("Score:" + score);
+                    updateScore();
                     //scoreText.invalidate();
                 }
                 invalidate();
@@ -155,8 +156,7 @@ public class GameView extends View {
                 }  else if (player==blue_ghost && blueVulnerable) {
                     blueVulnerable = false;
                     score += 25;
-                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                    scoreText.setText("Score:" + score);
+                    updateScore();
                     //scoreText.invalidate();
                     blue_ghost=cells[4][4];
                 }
@@ -190,8 +190,7 @@ public class GameView extends View {
                 } else if (player==yellow_ghost && yellowVulnerable) {
                     yellowVulnerable = false;
                     score += 25;
-                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                    scoreText.setText("Score:" + score);
+                    updateScore();
                     //scoreText.invalidate();
                     int[] pos= yellowq.poll();
                     yellow_ghost=cells[4][5];
@@ -229,8 +228,7 @@ public class GameView extends View {
                 }  else if (player==pink_ghost && pinkVulnerable) {
                     pinkVulnerable = false;
                     score += 25;
-                    TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                    scoreText.setText("Score:" + score);
+                    updateScore();
                     //scoreText.invalidate();
                     int[] pos= pinkq.poll();
                     pink_ghost=cells[2][4];
@@ -265,6 +263,16 @@ public class GameView extends View {
         t.schedule(pinkmove,8500,7500);
         t.schedule(yellowmove,6500,750);
 
+    }
+    void updateScore() {
+        Activity a = (Activity) context;
+        a.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
+                scoreText.setText("Score:" + score);
+            }
+        });
     }
     void checkLives(){
 
@@ -736,9 +744,7 @@ public class GameView extends View {
 
                         }
 
-                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                        scoreText.setText("Score: " + score);
-                        scoreText.invalidate();
+                        updateScore();
                         player.visited=true;
                     }
                 }
@@ -761,9 +767,7 @@ public class GameView extends View {
 
                         }
 
-                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                        scoreText.setText("Score: " + score);
-                        scoreText.invalidate();
+                        
                         player.visited=true;
                     }
                 }
@@ -789,9 +793,7 @@ public class GameView extends View {
 
                         }
 
-                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                        scoreText.setText("Score: " + score);
-                        scoreText.invalidate();
+                        updateScore();
                         player.visited=true;
                     }
                 }
@@ -816,9 +818,7 @@ public class GameView extends View {
 
                         }
 
-                        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-                        scoreText.setText("Score: " + score);
-                        scoreText.invalidate();
+                        updateScore();
                         player.visited=true;
                     }
                 }
@@ -827,13 +827,25 @@ public class GameView extends View {
         invalidate();
 
     }
+    TimerTask ghostFlee = new TimerTask() {
+        @Override
+        public void run() {
+            flee(red_ghost);
+            flee(blue_ghost);
+            flee(yellow_ghost);
+            flee(pink_ghost);
+        }
+    };
     TimerTask ghostReset = new TimerTask() {
         @Override
         public void run() {
-            blue=BitmapFactory.decodeResource(getResources(),R.drawable.blue);
-            pink=BitmapFactory.decodeResource(getResources(),R.drawable.pink);
-            red=BitmapFactory.decodeResource(getResources(),R.drawable.red);
-            yellow=BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
+            redVulnerable = false;
+            blueVulnerable = false;
+            pinkVulnerable = false;
+            yellowVulnerable = false;
+            ghostReset.cancel();
+            ghostFlee.cancel();
+            t.purge();
             //call original chase methods or restart timertask?
         }
     };
@@ -845,12 +857,8 @@ public class GameView extends View {
         pinkVulnerable = true;
         yellowVulnerable = true;
         invalidate();
-
-        flee(red_ghost);
-        flee(blue_ghost);
-        flee(yellow_ghost);
-        flee(pink_ghost);
-        //t.schedule(ghostReset,500);
+        //t.schedule(ghostFlee,0,750);
+        //t.schedule(ghostReset,5000);
         if (player == red_ghost) {
             eatGhost(red_ghost);
             redVulnerable = false;
@@ -873,9 +881,7 @@ public class GameView extends View {
     private void eatGhost(cell ghost) {
         //increment and display score
         score += 25;
-        TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
-        scoreText.setText("Score: " + score);
-        scoreText.invalidate();
+        updateScore();
 
 
         //reset ghost position
@@ -898,7 +904,7 @@ public class GameView extends View {
 
     private void flee(cell ghost) {
         //need to cancel original timertask for the individual chases?
-        //currently opposite of inky chase
+        //currently inky chase
         int dx = Math.abs(ghost.col- player.col);
         int dy = Math.abs(ghost.row- player.row);
         if (dx > dy) {
@@ -1040,6 +1046,7 @@ public class GameView extends View {
         return super.onTouchEvent(event);
 
     }
+
 
     private class cell{
         boolean topWall = false;
