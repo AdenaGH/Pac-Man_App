@@ -24,7 +24,16 @@ import java.util.TimerTask;
 
 public class GameView extends View {
     Context context;
-    private static int lives =configure.getLives();
+    private static int lives;
+
+    public static int getLives() {
+        return lives;
+    }
+
+    public static void setLives(int lives) {
+        GameView.lives = lives;
+    }
+
     private static int score=0;
     private enum Direction{UP,DOWN,LEFT,RIGHT}
     //TODO
@@ -216,6 +225,16 @@ public class GameView extends View {
                 }
             }
         };
+
+        TimerTask scorecheck= new TimerTask() {
+            @Override
+            public void run() {
+                if (score==99){
+                    checkScore();
+                }
+            }
+        };
+        t.schedule(scorecheck,0,1);
         t.schedule(redstart,0,1000);
         t.schedule(yellowstart,2000,1000);
         t.schedule(bluestart,4000,1000);
@@ -227,9 +246,29 @@ public class GameView extends View {
         t.schedule(yellowmove,6500,750);
 
     }
+
+    void checkScore(){
+        t.cancel();
+        Activity b = (Activity)context;
+        b.runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                b.setContentView(R.layout.activity_youwin);
+                Intent in = new Intent(b, youwin.class);
+                b.finish();
+                b.startActivity(in);
+            }
+        });
+//        Activity a = (Activity)context;
+//        a.setContentView(R.layout.end);
+        //Intent intent = new Intent(this.getContext(), End.class);
+//        a.startActivity(intent);
+
+    }
     void checkLives(){
 
 //        System.out.println("checkLives");
+        t.cancel();
         Activity a = (Activity)context;
         a.runOnUiThread(new Runnable(){
             @Override
