@@ -673,10 +673,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
-                            scoreBoost();
+                            ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            scoreIncrement();
+                            ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -697,10 +697,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            scoreIncrement();
+                            ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -724,10 +724,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            ScoreBoost.scoreBoost(score);
                         }else{
                             //score=score+1;
-                            scoreIncrement();
+                            ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -750,10 +750,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            scoreIncrement();
+                            ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -832,12 +832,8 @@ public class GameView extends View {
 
     }
 
-    private void scoreBoost(){
-        score += 10;
-    }
-    private void scoreIncrement(){
-        score++;
-    }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
