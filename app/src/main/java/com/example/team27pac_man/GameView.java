@@ -14,13 +14,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class GameView extends View {
     Context context;
@@ -44,12 +44,12 @@ public class GameView extends View {
     int bluecounter=0;
     int pinkcounter=0;
 
-    private cell[][] cells;
-    private cell player;
-    private cell blue_ghost;
-    private cell pink_ghost;
-    private cell red_ghost;
-    private cell yellow_ghost;
+    private Cell[][] cells;
+    private Cell player;
+    private Cell blue_ghost;
+    private Cell pink_ghost;
+    private Cell red_ghost;
+    private Cell yellow_ghost;
     private static final int COLS=7,ROWS=10;
     private float cellSize,hMar,vMar;
     private final float thick = 15;
@@ -66,11 +66,12 @@ public class GameView extends View {
     Timer t = new Timer();
 
 
-    public static int getScore(){
+    public static long getScore(){
         return score;
     }
-    public static void setScore(int score) {
+    public static long setScore(int score) {
         GameView.score = score;
+        return 0;
     }
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -457,11 +458,11 @@ public class GameView extends View {
     }
 
     private void createMaze(){
-        cells=new cell[COLS][ROWS];
+        cells=new Cell[COLS][ROWS];
         for(int x = 0;x<COLS;x++){
             for(int y =0;y<ROWS;y++){
 
-                cells[x][y]=new cell(x,y);
+                cells[x][y]=new Cell(x,y);
                 if(layout[x][y]==1){
                     cells[x][y].topWall=true;
                 }
@@ -879,18 +880,6 @@ public class GameView extends View {
 
     }
 
-    private class cell{
-        boolean topWall = false;
-        boolean bottomWall = false;
-        boolean rightWall = false;
-        boolean leftWall =false;
-        boolean pellet =true;
-        boolean visited =false;
-        int col,row;
 
-        public cell(int col, int row) {
-            this.col = col;
-            this.row = row;
-        }
-    }
+
 }
