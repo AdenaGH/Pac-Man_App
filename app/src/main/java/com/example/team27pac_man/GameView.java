@@ -45,8 +45,8 @@ public class GameView extends View {
     int bluecounter=0;
     int pinkcounter=0;
 
-    //private TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
     private cell[][] cells;
+    private cell food; // for food sprite- have only added the sprite- work on functionality
     private cell player;
     private cell blue_ghost;
     private cell pink_ghost;
@@ -63,6 +63,7 @@ public class GameView extends View {
     private Paint wall;
     private Paint pellets;
     private  Paint power;
+    Bitmap foodSprite;
     Bitmap pac;
     Bitmap blue;
     Bitmap red;
@@ -92,7 +93,7 @@ public class GameView extends View {
         pellets.setColor(Color.YELLOW);
         selectLayout();
         createMaze();
-        
+
         TimerTask redstart =new TimerTask() {
             @Override
             public void run() {
@@ -107,7 +108,6 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 redchase();
                 if(player==red_ghost && !redVulnerable){
                     player=cells[3][9];
@@ -176,7 +176,6 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 clydeChase();
                 if(player==yellow_ghost && !yellowVulnerable){
                     player=cells[3][9];
@@ -214,7 +213,6 @@ public class GameView extends View {
 
             @Override
             public void run() {
-                //TextView scoreText = (TextView) ((Maze)context).findViewById(R.id.scoreTextView);
                 pinkchase();
                 if(player==pink_ghost && !pinkVulnerable){
                     player=cells[3][9];
@@ -574,8 +572,24 @@ public class GameView extends View {
         red_ghost=cells[2][5];
         pink_ghost=cells[2][4];
         yellow_ghost=cells[4][5];
+        selectFoodPos();
 
 
+    }
+
+    private void selectFoodPos() {
+        if (configure.getDifficulty().equals("Passive")){
+            food = cells[5][0];
+        } else if(configure.getDifficulty().equals("Easy")){
+            food = cells[1][2];
+        } else if(configure.getDifficulty().equals("Medium")){
+            food = cells[5][1];
+        } else if(configure.getDifficulty().equals("Hard")){
+            food = cells[4][1];
+        } else if(configure.getDifficulty().equals("Expert")){
+            food = cells[4][2];
+        }
+        food.isFood = true;
     }
 
     @Override
@@ -607,7 +621,11 @@ public class GameView extends View {
                                 pellets
                         );
 
-                    }else {
+                    } else if(cells[x][y].isFood == true){
+                        foodSprite = BitmapFactory.decodeResource(getResources(),R.drawable.food);
+                        canvas.drawBitmap(foodSprite,(food.col*cellSize)+(cellSize/4),(food.row*cellSize)+(cellSize/4),null);
+                    }
+                    else {
                         canvas.drawCircle(
                                 (x)*cellSize+(cellSize/2),
                                 (y)*cellSize+(cellSize/2),
@@ -696,7 +714,7 @@ public class GameView extends View {
             rotatePacDown();
         }
         canvas.drawBitmap(pac,(player.col*cellSize)+(cellSize/4),(player.row*cellSize)+(cellSize/4),null);
-        
+
         if (!blueVulnerable) {
             blue = BitmapFactory.decodeResource(getResources(), R.drawable.blue);
         } else {
@@ -721,7 +739,7 @@ public class GameView extends View {
         canvas.drawBitmap(red, (red_ghost.col * cellSize) + (cellSize / 4), (red_ghost.row * cellSize) + (cellSize / 4), null);
         canvas.drawBitmap(pink, (pink_ghost.col * cellSize) + (cellSize / 4), (pink_ghost.row * cellSize) + (cellSize / 4), null);
         canvas.drawBitmap(yellow, (yellow_ghost.col * cellSize) + (cellSize / 4), (yellow_ghost.row * cellSize) + (cellSize / 4), null);
-        
+
 
     }
 
@@ -739,7 +757,10 @@ public class GameView extends View {
 //                            score=score+10; //make a bigger change?
                             scoreBoost();
                             powerPelletEaten();
-                        }else{
+                        }
+                        else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
 //                            score=score+1;
                             scoreIncrement();
 
@@ -758,17 +779,21 @@ public class GameView extends View {
                     if(!player.visited){
 
                         player.pellet=false;
-                        if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
+                        if((player.col== 0 && player.row == 0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
                             scoreBoost();
                             powerPelletEaten();
+                        } else if(player.col == food.col & player.row == food.row) {
+                            score += 50;
+
+
                         }else{
 //                            score=score+1;
                             scoreIncrement();
 
                         }
 
-                        
+
                         player.visited=true;
                     }
                 }
@@ -788,7 +813,10 @@ public class GameView extends View {
 //                            score=score+10;
                             scoreBoost();
                             powerPelletEaten();
-                        }else{
+                        }
+                        else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
                             //score=score+1;
                             scoreIncrement();
 
@@ -813,7 +841,10 @@ public class GameView extends View {
 //                            score=score+10;
                             scoreBoost();
                             powerPelletEaten();
-                        }else{
+                        }
+                         else if(player.col == food.col & player.row == food.row){
+                            score += 50;
+                        } else{
 //                            score=score+1;
                             scoreIncrement();
 
@@ -1055,6 +1086,7 @@ public class GameView extends View {
         boolean rightWall = false;
         boolean leftWall =false;
         boolean pellet =true;
+        boolean isFood = false;
         boolean visited =false;
         int col,row;
 
