@@ -15,8 +15,12 @@ public class youwin extends AppCompatActivity {
         setContentView(R.layout.activity_youwin);
         Button restart = (Button) findViewById(R.id.restart_button);
         Button quit = (Button) findViewById(R.id.end_button);
+        TextView points =(TextView)findViewById(R.id.winpints);
+        points.setText("Score: "+ GameView.getScore());
         TextView lives =(TextView)findViewById(R.id.lost);
         lives.setText("Lives Lost: "+ (configure.getLives()-GameView.getLives()));
+        TextView kills =(TextView)findViewById(R.id.winkills);
+        kills.setText("Ghosts Killed: "+ GameView.getkills());
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

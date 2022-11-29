@@ -17,6 +17,8 @@ public class End extends AppCompatActivity {
         points.setText("Score: "+ GameView.getScore());
         TextView lives =(TextView)findViewById(R.id.Liveslost);
         lives.setText("Lives Lost: "+ configure.getLives());
+        TextView kills =(TextView)findViewById(R.id.ghostkills);
+        kills.setText("Ghosts killed: "+ GameView.getkills());
         Button restart = (Button) findViewById(R.id.restart_button);
         Button quit = (Button) findViewById(R.id.end_button);
         restart.setOnClickListener(new View.OnClickListener() {

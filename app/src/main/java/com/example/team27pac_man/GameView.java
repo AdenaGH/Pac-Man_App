@@ -26,6 +26,7 @@ import java.util.TimerTask;
 public class GameView extends View {
     Context context;
     private static int lives;
+    private static int pelletscount=0;
 
     public static int getLives() {
         return lives;
@@ -61,6 +62,9 @@ public class GameView extends View {
     private cell pink_ghost;
     private cell red_ghost;
     private cell yellow_ghost;
+    private static int kills=0;
+    public static int getkills(){return kills;}
+
     private boolean redVulnerable = false;
     private boolean blueVulnerable = false;
     private boolean pinkVulnerable = false;
@@ -128,6 +132,7 @@ public class GameView extends View {
                         live.setText("Lives:" + lives);
                     }
                 }  else if (player==red_ghost && redVulnerable) {
+                    kills+=1;
                     red_ghost=cells[2][5];
                     redVulnerable = false;
                     score += 25;
@@ -163,6 +168,7 @@ public class GameView extends View {
                         live.setText("Lives:" + lives);
                     }
                 }  else if (player==blue_ghost && blueVulnerable) {
+                    kills+=1;
                     blueVulnerable = false;
                     score += 25;
                     updateScore();
@@ -196,6 +202,7 @@ public class GameView extends View {
                         live.setText("Lives:" + lives);
                     }
                 } else if (player==yellow_ghost && yellowVulnerable) {
+                    kills+=1;
                     yellowVulnerable = false;
                     score += 25;
                     updateScore();
@@ -233,6 +240,7 @@ public class GameView extends View {
                         live.setText("Lives:" + lives);
                     }
                 }  else if (player==pink_ghost && pinkVulnerable) {
+                    kills+=1;
                     pinkVulnerable = false;
                     score += 25;
                     updateScore();
@@ -264,7 +272,7 @@ public class GameView extends View {
         TimerTask scorecheck= new TimerTask() {
             @Override
             public void run() {
-                if (score==99){
+                if (pelletscount==63){
                     checkScore();
                 }
             }
@@ -792,6 +800,7 @@ public class GameView extends View {
                     player=cells[player.col][player.row-1];
                     if(!player.visited){
                         player.pellet=false;
+                        pelletscount+=1;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
                             scoreBoost();
@@ -816,7 +825,7 @@ public class GameView extends View {
                 if(!player.bottomWall){
                     player=cells[player.col][player.row+1];
                     if(!player.visited){
-
+                        pelletscount+=1;
                         player.pellet=false;
                         if((player.col== 0 && player.row == 0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
@@ -846,7 +855,7 @@ public class GameView extends View {
                     }else{player=cells[player.col-1][player.row];}
 
                     if(!player.visited){
-
+                        pelletscount+=1;
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
@@ -874,7 +883,7 @@ public class GameView extends View {
                         player=cells[0][4];
                     }else{player=cells[player.col+1][player.row];}
                     if(!player.visited){
-
+                        pelletscount+=1;
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
