@@ -311,7 +311,7 @@ public class GameView extends View {
                     if ((yellow_ghost.col) > (player.col) && !yellow_ghost.leftWall) {
                         //yellow_ghost.col = yellow_ghost.col - 1;
                         yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
-                    } else if (!yellow_ghost.rightWall) {
+                    } else if (!yellow_ghost.rightWall && yellow_ghost.col < 5) {
                         //move right
                         yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
                     }
@@ -332,7 +332,8 @@ public class GameView extends View {
                         yellow_ghost = cells[yellow_ghost.col + 1][yellow_ghost.row];
                     } else if (!yellow_ghost.rightWall) {
                         //move right
-                        yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
+                        //TODO: Fix this line of code so that clyde (yellow ghost) doesn't go out of bounds.
+                       // yellow_ghost = cells[yellow_ghost.col - 1][yellow_ghost.row];
                     }
                 } else {
                     if ((yellow_ghost.row) > (player.row) && !yellow_ghost.topWall) {
