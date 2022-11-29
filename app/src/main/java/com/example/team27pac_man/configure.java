@@ -65,6 +65,7 @@ public class configure extends AppCompatActivity implements AdapterView.OnItemSe
                     contButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            GameView.setLives(configure.getLives());
                             TextView difficultyText = (TextView) findViewById(R.id.difficultyTextView);
                             String str = ((difficultyText.getText().toString()).split(" "))[1];
                             Intent intent = new Intent(configure.this, Maze.class);
