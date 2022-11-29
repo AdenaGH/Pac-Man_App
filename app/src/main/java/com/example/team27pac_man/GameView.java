@@ -31,7 +31,7 @@ public class GameView extends View {
     //generate 3 to 4 different layoutIds for each difficulty level
     //assign "layout" to a specific layoutIds later depending on the level
     // make separate methods scoreBoost(), and incrementScore()
-    private int [][] layout;
+    public static int [][] layout;
 //    private Canvas gameCanvas;
     private String pacPostion = "right";
 
@@ -84,7 +84,7 @@ public class GameView extends View {
         thinwall.setStrokeWidth(5);
         pellets = new Paint();
         pellets.setColor(Color.YELLOW);
-        selectLayout();
+        layout=SelectLayout.selectLayout();
         createMaze();
         TimerTask redstart =new TimerTask() {
             @Override
@@ -400,62 +400,7 @@ public class GameView extends View {
         }
 
     }
-    private void selectLayout() {
-        if(configure.getDifficulty().equals("Passive")){
-            layout = new int[][]{
-                    {5, 11, 11, 3, 0, 3, 3, 3, 3, 7},
-                    {1, 3, 7, 1, 4, 4, 2, 6, 4, 2},
-                    {1, 0, 2, 10, 5, 7, 10, 5, 3, 8},
-                    {1, 4, 2, 10, 0, 2, 1, 0, 0, 12},
-                    {10, 5, 0, 2, 6, 8, 1, 4, 4, 7},
-                    {10, 1, 4, 4, 11, 3, 0, 3, 7, 10},
-                    {6, 4, 11, 11, 0, 4, 4, 4, 4, 8}
-            };
-        } else if(configure.getDifficulty().equals("Easy")){
-            layout = new int[][]{
-                    {5, 11, 11, 3, 0, 3, 3, 3, 3, 7},
-                    {1, 3, 7, 1, 4, 11, 0, 7, 5, 2},
-                    {1, 0, 2, 10, 5, 7, 1, 2, 1, 8},
-                    {1, 0, 2, 10, 0, 2, 1, 0, 0, 12},
-                    {10, 6, 4, 2, 6, 8, 10, 1, 0, 7},
-                    {10, 5, 3, 0, 3, 11, 4, 4, 7, 10},
-                    {6, 4, 4, 4, 0, 4, 4, 4, 4, 8}
-            };
-        } else if(configure.getDifficulty().equals("Medium")){
-            layout = new int[][]{
-                    {5, 11, 11, 3, 0, 11, 11, 3, 3, 7},
-                    {1, 7, 5, 0, 4, 11, 3, 8, 6, 2},
-                    {1, 2, 10, 10, 5, 7, 1, 7, 5, 8},
-                    {1, 0, 0, 10, 0, 2, 1, 0, 0, 12},
-                    {10, 6, 4, 2, 6, 8, 2, 2, 1, 7},
-                    {10, 5, 3, 4, 3, 3, 4, 8, 6, 2},
-                    {6, 4, 4, 4, 0, 11, 11, 11, 11, 8}
-            };
 
-        } else if(configure.getDifficulty().equals("Hard")){
-            layout = new int[][]{
-                    {5, 11, 11, 3, 0, 11, 3, 3, 11, 7},
-                    {1, 7, 5, 0, 4, 11, 2, 10, 5, 2},
-                    {6, 2, 1, 10, 5, 7, 1, 8, 1, 8},
-                    {1, 0, 0, 10, 0, 2, 1, 3, 0, 12},
-                    {6, 7, 6, 2, 6, 8, 1, 10, 1, 7},
-                    {1, 2, 5, 0, 3, 11, 0, 8, 6, 2},
-                    {6, 4, 4, 4, 0, 11, 4, 11, 11, 8}
-            };
-
-        } else if(configure.getDifficulty().equals("Expert")){
-            layout = new int[][]{
-                    {5, 7, 3, 3, 0, 11, 3, 3, 11, 7},
-                    {1, 4, 8, 0, 4, 11, 0, 7, 5, 2},
-                    {6, 3, 7, 10, 5, 7, 1, 10, 1, 8},
-                    {1, 2, 0, 2, 0, 2, 1, 0, 0, 12},
-                    {10, 6, 8, 10, 6, 8, 1, 10, 1, 7},
-                    {10, 5, 11, 0, 0, 11, 0, 8, 6, 2},
-                    {6, 4, 4, 4, 0, 11, 4, 11, 11, 8}
-            };
-
-        }
-    }
 
     private void createMaze(){
         cells=new Cell[COLS][ROWS];
@@ -673,10 +618,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
-                            ScoreBoost.scoreBoost(score);
+                            score=ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            ScoreIncrement.scoreIncrement(score);
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -697,10 +642,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            ScoreBoost.scoreBoost(score);
+                            score=ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            ScoreIncrement.scoreIncrement(score);
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -724,10 +669,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            ScoreBoost.scoreBoost(score);
+                            score=ScoreBoost.scoreBoost(score);
                         }else{
                             //score=score+1;
-                            ScoreIncrement.scoreIncrement(score);
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -750,10 +695,10 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            ScoreBoost.scoreBoost(score);
+                            score=ScoreBoost.scoreBoost(score);
                         }else{
 //                            score=score+1;
-                            ScoreIncrement.scoreIncrement(score);
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
