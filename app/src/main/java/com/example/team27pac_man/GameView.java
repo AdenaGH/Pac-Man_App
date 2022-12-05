@@ -42,7 +42,7 @@ public class GameView extends View {
     //generate 3 to 4 different layoutIds for each difficulty level
     //assign "layout" to a specific layoutIds later depending on the level
     // make separate methods scoreBoost(), and incrementScore()
-    private int [][] layout;
+    public static int [][] layout;
     private Canvas gameCanvas;
     private String pacPostion = "right";
 
@@ -89,8 +89,9 @@ public class GameView extends View {
     public static int getScore(){
         return score;
     }
-    public static void setScore(int score) {
+    public static long setScore(int score) {
         GameView.score = score;
+        return 0;
     }
     public GameView(Context context, @Nullable AttributeSet attrs) {
 
@@ -803,14 +804,14 @@ public class GameView extends View {
                         pelletscount+=1;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10; //make a bigger change?
-                            scoreBoost();
+                            score=ScoreBoost.scoreBoost(score);
                             powerPelletEaten();
                         }
                         else if(player.col == food.col & player.row == food.row){
                             score += 50;
                         } else{
 //                            score=score+1;
-                            scoreIncrement();
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -829,7 +830,7 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col== 0 && player.row == 0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            score=ScoreBoost.scoreBoost(score);
                             powerPelletEaten();
                         } else if(player.col == food.col & player.row == food.row) {
                             score += 50;
@@ -837,7 +838,7 @@ public class GameView extends View {
 
                         }else{
 //                            score=score+1;
-                            scoreIncrement();
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -859,14 +860,14 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            score=ScoreBoost.scoreBoost(score);
                             powerPelletEaten();
                         }
                         else if(player.col == food.col & player.row == food.row){
                             score += 50;
                         } else{
                             //score=score+1;
-                            scoreIncrement();
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -887,14 +888,14 @@ public class GameView extends View {
                         player.pellet=false;
                         if((player.col==0 && player.row ==0)||(player.col==6 && player.row==0)||(player.col==0 && player.row==9)||(player.col==6 && player.row==9)){
 //                            score=score+10;
-                            scoreBoost();
+                            score=ScoreBoost.scoreBoost(score);
                             powerPelletEaten();
                         }
                          else if(player.col == food.col & player.row == food.row){
                             score += 50;
                         } else{
 //                            score=score+1;
-                            scoreIncrement();
+                            score=ScoreIncrement.scoreIncrement(score);
 
                         }
 
@@ -1079,12 +1080,8 @@ public class GameView extends View {
 
     }
 
-    private void scoreBoost(){
-        score += 10;
-    }
-    private void scoreIncrement(){
-        score++;
-    }
+   
+    
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -1128,19 +1125,5 @@ public class GameView extends View {
     }
 
 
-    private class cell{
-        boolean topWall = false;
-        boolean bottomWall = false;
-        boolean rightWall = false;
-        boolean leftWall =false;
-        boolean pellet =true;
-        boolean isFood = false;
-        boolean visited =false;
-        int col,row;
-
-        public cell(int col, int row) {
-            this.col = col;
-            this.row = row;
-        }
-    }
+    
 }
